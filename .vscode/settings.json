@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "/home/userstar713/workspace/weini/game_proj/work_dir/www_webserver/venv/bin/python",
+    "python.linting.flake8Enabled": true,
+    "editor.rulers": [80]
+}
