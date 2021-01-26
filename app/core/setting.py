@@ -6,7 +6,7 @@ from pony.orm.core import BindingError
 from pony.orm.dbapiprovider import ProgrammingError
 from pydantic import BaseSettings
 
-from ..utils.logging import logger
+from ..libs.logging import logger
 
 
 db = orm.Database()
