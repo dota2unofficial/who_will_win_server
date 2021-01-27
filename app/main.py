@@ -2,12 +2,12 @@ import os
 
 from fastapi import FastAPI
 
-from .core.setting import Settings
+from .core.settings import Settings
 from .libs.logging import logger
 from .libs.utils import close_htts_session
 
-from .apis.v1.routes.matchs import router as match_routers
-from .apis.v1.routes.payments import router as payment_routers
+from .apis.v1.routes.match import router as match_routers
+from .apis.v1.routes.payment import router as payment_routers
 
 if not bool(os.getenv('DEBUG_ENV', False)):
     app = FastAPI(
@@ -32,13 +32,13 @@ def index():
 
 app.include_router(
     match_routers,
-    prefix="/api/v1/match",
+    prefix="/api/lua/match",
     tags=["Match"]
 )
 
 app.include_router(
     payment_routers,
-    prefix="/api/v1/payment",
+    prefix="/api/lua/payment",
     tags=["Payment"]
 )
 
@@ -46,8 +46,8 @@ app.include_router(
 @app.on_event('startup')
 async def init_setting():
     logger.info('[startup] process started')
-    Settings.stripe_connection
-    Settings.assemble_db_connection
+    Settings.stripe_connect
+    Settings.db_connect
     logger.info('[startup] process finished')
 
 

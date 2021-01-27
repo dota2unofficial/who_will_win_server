@@ -22,8 +22,8 @@ class Settings(BaseSettings):
     STRIPE_SECRET: str
     STEAM_WEBAPI_KEY: str
 
-    def assemble_db_connection(
-        cls, v: Optional[str], values: Dict[str, Any]
+    def db_connect(
+        self, v: Optional[str], values: Dict[str, Any]
     ) -> Any:
         if isinstance(v, str):
             return v
@@ -79,8 +79,8 @@ class Settings(BaseSettings):
     async def shutdown(self):
         db.disconnect()
 
-    def stripe_connection(
-        cls, v: Optional[str], values: Dict[str, Any]
+    def stripe_connect(
+        self, v: Optional[str], values: Dict[str, Any]
     ) -> Any:
         if isinstance(v, str):
             return v
