@@ -1,15 +1,15 @@
-from typing import Any, Dict, Optional
-
+from typing import Final
 import stripe
-from pony import orm
+from pydantic import BaseSettings
 from pony.orm.core import BindingError
 from pony.orm.dbapiprovider import ProgrammingError
-from pydantic import BaseSettings
+from aiohttp import ClientSession
 
 from ..libs.logging import logger
+from .models.db import db
+from .models import *
 
-
-db = orm.Database()
+__Session: Final = ClientSession()
 
 
 class Settings(BaseSettings):
@@ -22,45 +22,37 @@ class Settings(BaseSettings):
     STRIPE_SECRET: str
     STEAM_WEBAPI_KEY: str
 
-    def db_connect(
-        self, v: Optional[str], values: Dict[str, Any]
-    ) -> Any:
-        if isinstance(v, str):
-            return v
-        db_provider = values.get('DB_PROVIDER')
-        db_user = values.get('DB_USER')
-        db_password = values.get('DB_PASSWORD')
-        db_host = values.get('DB_HOST')
-        db_port = values.get('DB_PORT')
-        db_name = values.get('DB_NAME')
-
-        print(f'Connecting to {db_provider} databse with user: {db_user}, ' +
-              f'password: {db_password}, host: {db_host}, ' +
-              f'port: {db_port}, database: {db_name}')
+    async def db_connect(self):
+        print(
+            f'Connecting to {self.DB_PROVIDER} databse ' +
+            f'with user: {self.DB_USER}, ' +
+            f'password: {self.DB_PASSWORD}, host: {self.DB_HOST}, ' +
+            f'port: {self.DB_PORT}, database: {self.DB_NAME}')
         logger.info(
-            f'Connecting to {db_provider} databse with user: {db_user}, ' +
-            f'password: {db_password}, host: {db_host}, ' +
-            f'port: {db_port}, database: {db_name}')
+            f'Connecting to {self.DB_PROVIDER} databse ' +
+            f'with user: {self.DB_USER}, ' +
+            f'password: {self.DB_PASSWORD}, host: {self.DB_HOST}, ' +
+            f'port: {self.DB_PORT}, database: {self.DB_NAME}')
 
         try:
-            if db_provider == 'postgres':
+            if self.DB_PROVIDER == 'postgres':
                 db.bind(
-                    'postgres',
-                    user=db_user,
-                    password=db_password,
-                    host=db_host,
-                    port=db_port,
-                    database=db_name
+                    provider='postgres',
+                    user=self.DB_USER,
+                    password=self.DB_PASSWORD,
+                    host=self.DB_HOST,
+                    port=self.DB_PORT,
+                    database=self.DB_NAME
                 )
-            elif db_provider == 'mysql':
+            elif self.DB_PROVIDER == 'mysql':
                 db.bind(
                     'mysql',
-                    user=db_user,
-                    passwd=db_password,
-                    host=db_host,
-                    db=db_name
+                    user=self.DB_USER,
+                    passwd=self.DB_PASSWORD,
+                    host=self.DB_HOST,
+                    db=self.DB_NAME
                 )
-            elif db_provider == 'sqlite':
+            elif self.DB_PROVIDER == 'sqlite':
                 db.bind(
                     'sqlite',
                     'database_file.sqlite',
@@ -72,6 +64,7 @@ class Settings(BaseSettings):
 
         try:
             db.generate_mapping(create_tables=True)
+            print('generate_mapping')
         except ProgrammingError as e:
             print(f'Failed in connectiong to database: {e}')
             logger.error(f'Failed in connectiong to database: {e}')
@@ -79,13 +72,13 @@ class Settings(BaseSettings):
     async def shutdown(self):
         db.disconnect()
 
-    def stripe_connect(
-        self, v: Optional[str], values: Dict[str, Any]
-    ) -> Any:
-        if isinstance(v, str):
-            return v
-        secret_key = values.get('STRIPE_SECRET')
+    async def stripe_connect(self):
+        secret_key = self.STRIPE_SECRET
         stripe.api_key = secret_key
+        logger.info('Stripe Key has been set.')
+
+    async def close_htts_session(self):
+        await __Session.close()
 
     class Config:
         case_sensitive = True

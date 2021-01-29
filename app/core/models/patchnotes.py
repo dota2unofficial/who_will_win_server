@@ -2,11 +2,12 @@ from datetime import datetime
 
 from pony.orm import Required, Optional
 
-from ..settings import db
+from .db import db
 
 
 class Patchnotes(db.Entity):
     _table_ = 'Patchnotes'
+
     date = Required(datetime)
     content_english = Optional(
         str,

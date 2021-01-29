@@ -2,11 +2,12 @@ from datetime import datetime
 
 from pony.orm import Required, Optional, Json
 
-from ..settings import db
+from .db import db
 
 
 class Match(db.Entity):
     _table_ = 'Match'
+
     match_id = Required(
         int,
         size=64,
@@ -25,6 +26,7 @@ class Match(db.Entity):
 
 class MatchEvent(db.Entity):
     _table_ = 'MatchEvent'
+
     match_id = Required(
         int,
         size=64,
@@ -38,6 +40,7 @@ class MatchEvent(db.Entity):
 
 class ScriptError(db.Entity):
     _table_ = 'ScriptError'
+
     stack = Required(
         str,
         sql_type='text',

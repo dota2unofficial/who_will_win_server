@@ -1,11 +1,12 @@
 import os
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
-from .core.settings import Settings
+from .core.settings import settings
 from .libs.logging import logger
-from .libs.utils import close_htts_session
 
+from .apis.v1.routes.admin import router as admin_routers
 from .apis.v1.routes.match import router as match_routers
 from .apis.v1.routes.payment import router as payment_routers
 
@@ -23,6 +24,17 @@ else:
         description='This is a web server for Who_Will_Win custom game',
         version='1.0.0'
     )
+
+app.mount(
+    '/static',
+    StaticFiles(directory='app/static'),
+    name='static'
+)
+
+app.include_router(
+    admin_routers,
+    tags=["Admin"]
+)
 
 
 @app.get('/')
@@ -46,13 +58,13 @@ app.include_router(
 @app.on_event('startup')
 async def init_setting():
     logger.info('[startup] process started')
-    Settings.stripe_connect
-    Settings.db_connect
+    await settings.stripe_connect()
+    await settings.db_connect()
     logger.info('[startup] process finished')
 
 
 @app.on_event('shutdown')
 async def on_shutdown():
-    await close_htts_session()
-    await Settings.shutdown()
+    await settings.close_htts_session()
+    await settings.shutdown()
     logger.info('[shutdown] process finished')

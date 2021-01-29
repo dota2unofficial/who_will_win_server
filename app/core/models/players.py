@@ -2,11 +2,12 @@ from datetime import datetime
 
 from pony.orm import Required, Optional, Json
 
-from ..settings import db
+from .db import db
 
 
 class Player(db.Entity):
     _table_ = 'Player'
+
     steam_id = Required(
         int,
         size=64,
@@ -88,6 +89,7 @@ class Player(db.Entity):
 
 class MatchPlayer(db.Entity):
     _table_ = 'MatchPlayer'
+
     match_id = Required(
         int,
         size=64,

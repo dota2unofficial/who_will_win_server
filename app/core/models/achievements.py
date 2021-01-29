@@ -1,10 +1,11 @@
 from pony.orm import Required, Optional, Json, IntArray
 
-from ..settings import db
+from .db import db
 
 
 class Achievements(db.Entity):
     _table_ = "Achievements"
+
     name = Required(
         str,
         max_len=100,
@@ -28,6 +29,7 @@ class Achievements(db.Entity):
 
 class PlayerAchievements(db.Entity):
     _table_ = 'PlayerAchievements'
+
     SteamId = Required(
         int,
         size=64,

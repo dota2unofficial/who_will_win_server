@@ -2,11 +2,12 @@ from datetime import date
 
 from pony.orm import Required, Optional
 
-from ..settings import db
+from .db import db
 
 
 class PriceList(db.Entity):
     _table_ = 'PriceList'
+
     payment_kind = Required(
         str,
         max_len=100,
@@ -32,6 +33,7 @@ class PriceList(db.Entity):
 
 class ItemSellingHistory(db.Entity):
     _table_ = 'ItemSellingHistory'
+
     steam_id = Required(
         int,
         size=64,
