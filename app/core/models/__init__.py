@@ -4,3 +4,4 @@ from .patchnotes import *
 from .payments import *
 from .players import *
 from .quests import *
+from .keys import *

@@ -6,11 +6,11 @@ from fastapi.staticfiles import StaticFiles
 from .core.settings import settings
 from .libs.logging import logger
 
-from .apis.v1.routes.admin import router as admin_routers
-from .apis.v1.routes.match import router as match_routers
-from .apis.v1.routes.payment import router as payment_routers
+from .apis.v1.admin.admin import router as admin_routers
+from .apis.v1.match.match import router as match_routers
+from .apis.v1.payment.payment import router as payment_routers
 
-if not bool(os.getenv('DEBUG_ENV', False)):
+if not bool(os.getenv('TEST_ENV', False)):
     app = FastAPI(
         title='Who_Will_Win API',
         description='This is a web server for Who_Will_Win custom game',
@@ -31,16 +31,16 @@ app.mount(
     name='static'
 )
 
-app.include_router(
-    admin_routers,
-    tags=["Admin"]
-)
-
 
 @app.get('/')
 def index():
     return {'message': 'Hello world'}
 
+
+app.include_router(
+    admin_routers,
+    tags=["Admin"]
+)
 
 app.include_router(
     match_routers,

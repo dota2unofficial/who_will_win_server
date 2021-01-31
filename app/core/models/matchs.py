@@ -38,6 +38,29 @@ class MatchEvent(db.Entity):
     )
 
 
+class MatchTeam(db.Entity):
+    _table_ = 'MatchTeam'
+    match_id = Required(
+        int,
+        size=64,
+        column='match_id'
+    )
+    team_id = Required(
+        int,
+        size=16,
+        column='team_id'
+    )
+    time = Required(
+        float,
+        sql_type='double precision',
+        column='time'
+    )
+    round = Required(
+        int,
+        column='round'
+    )
+
+
 class ScriptError(db.Entity):
     _table_ = 'ScriptError'
 

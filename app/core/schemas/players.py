@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Union, Optional
+from typing import Union, Optional, List
 
 import orjson
 from pony.orm.ormtypes import TrackedDict
@@ -7,27 +7,25 @@ from pydantic import BaseModel, Json
 
 
 class PlayerBeforeMatch(BaseModel):
-    steamId: str
+    steam_id: str
     settings: Union[TrackedDict, Json]
 
-    supporterState: int
-    SupporterEndDate: Optional[datetime]
+    supporter_state: int
+    supporter_enddate: Optional[datetime]
 
-    MatchCount: int
+    match_count: int
 
-    Rating_FFA: int
-    Rating_Duos: int
-    Rating_Squads: int
+    rating_ffa: int
+    rating_duos: int
+    rating_squads: int
 
-    BattlePass_Exp: int
-    BattlePass_Glory: int
-    BattlePass_Level: int
-    BattlePass_DailyExp: int
+    battlepass_exp: int
+    battlepass_glory: int
+    battlepass_level: int
+    battlepass_daily_exp: int
 
-    BattlePass_Fortune: int
-    BattlePass_DailyFortune: int
-
-    # battlePass: PlayerBattlePassData
+    battlepass_fortune: int
+    battlepass_daily_fortune: int
 
     class Config:
         orm_mode = True
@@ -38,3 +36,21 @@ class PlayerBeforeMatch(BaseModel):
 
         json_loads = orjson.loads
         json_dumps = orjson.dumps
+
+
+class RoundDeath(BaseModel):
+    round: int
+    name: str
+    totem: Optional[str]
+
+
+class PlayerAfterMatch(BaseModel):
+    player_id: int
+    steam_id: str
+    innate: Optional[str]
+    abilities: Optional[List[str]]
+    round_deaths: Optional[List[RoundDeath]]
+    items: Optional[list]
+    other_players_AvgMMR: int
+    early_leaver: Optional[bool]
+    mastery: Optional[str]

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pony.orm import Required, Optional, Json
+from pony.orm import Required, Optional, Json, StrArray
 
 from .db import db
 
@@ -105,28 +105,51 @@ class MatchPlayer(db.Entity):
         size=64,
         column='steam_id'
     )
-    rounds_won = Optional(
+    team_id = Required(
         int,
-        column='rounds_won'
+        size=16,
+        column='team_id'
     )
-    rounds_lost = Optional(
+    rating_change_new = Optional(
         int,
-        column='rounds_lost'
+        column='rating_change_new'
     )
-    total_bets = Optional(
+    rating_change_old = Optional(
         int,
-        column='total_bets'
+        column='rating_change_old'
     )
-    biggest_profit = Optional(
-        int,
-        column='biggest_profit'
-    )
-    biggest_lost = Optional(
-        int,
-        column='biggest_lost'
-    )
-    is_winner = Optional(
-        bool,
+    abilities = Optional(
+        StrArray,
         nullable=True,
-        column='is_winner'
+        column='abilities'
+    )
+    innate = Optional(
+        str,
+        column='innate'
+    )
+    round_deaths = Optional(
+        Json,
+        column='round_deaths'
+    )
+    items = Optional(
+        StrArray,
+        nullable=True,
+        column='items'
+    )
+
+    battlepass_expreward = Optional(
+        int,
+        sql_default=0,
+        column='battlepass_expreward'
+    )
+    battlepass_gloryreward = Optional(
+        int,
+        sql_default=0,
+        column='battlepass_gloryreward'
+    )
+
+    mastery = Optional(
+        str,
+        nullable=True,
+        column='mastery'
     )
