@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from pony.orm import db_session
 
 from ....libs.logging import logger
@@ -13,9 +13,19 @@ from ....libs.constants import (
 from ....libs.functions import (
     get_bp_required_exp,
 )
-from ....core.schemas.matchs import BeforeMatchIn, AfterMatchPlayerBased
+from ....core.schemas.matchs import (
+    BeforeMatchIn,
+    AfterMatchPlayerBased,
+    AfterMatchPlayerBasedUpdate,
+    PollEventsIn,
+    UpdateSettingsIn,
+    ScriptErrorIn
+)
 from ....core.schemas.players import PlayerBeforeMatch
-from .manager import record_team_players_rating
+from ....core.models.matchs import MatchTeam, MatchEvent
+from ....core.models.players import MatchPlayer
+from ....core.models.errors import ScriptError
+from .manager import record_team_players_rating, record_best_time
 from .actions import (
     process_incoming_players,
     get_players_achievements_batch,
@@ -136,16 +146,96 @@ async def after_match_player(
     }
 
 
+@db_session
+@router.post('/set_match_player_round_data')
+def set_match_player_round_data(
+    data: AfterMatchPlayerBasedUpdate,
+    auth=Depends(lua_auth)
+):
+
+    match_team = MatchTeam.get(
+        match_id=data.match_id,
+        team_id=data.team.team_id
+    )
+    if not match_team:
+        return Response(
+            status_code=404,
+            content=(f'MatchTeam with team_id<{data.team.team_id}> '
+                     f"and match_id<{data.match_id} doesn't exist>")
+        )
+    match_team.time = data.team.time
+    match_team.round = data.team.round
+    players_steam_ids = []
+    for player in data.team.players:
+        if player.steam_id != 0:
+            players_steam_ids.append(player.steam_id)
+    players = process_incoming_players(players_steam_ids)
+    record_best_time(data.team, players, data.map_name, True)
+
+    match_players = MatchPlayer.select(
+        lambda mp: mp.match_id == data.match_id and
+        mp.team_id == data.team.team_id
+    )
+    match_players = {str(mp.steam_id): mp for mp in match_players}
+
+    for player in data.team.players:
+        db_player = match_players.get(player.steam_id, None)
+        if not db_player:
+            continue
+        if player.innate:
+            db_player.innate = player.innate
+        if player.round_deaths:
+            db_player.round_deaths = [rd.dict() for rd in player.round_deaths]
+        else:
+            db_player.round_deaths = []
+        if player.items:
+            db_player.items = (
+                [str(item) for item in player.items if item is not None]
+            )
+        if player.abilities:
+            db_player.abilities = player.abilities
+        if player.mastery:
+            db_player.mastery = player.mastery
+
+
+@db_session
 @router.post('/events')
-async def match_events():
-    return {'message': 'Hello world'}
+async def poll_events(data: PollEventsIn, auth=Depends(lua_auth)):
+    response = []
+    events_query = MatchEvent.select(lambda me: me.match_id == data.match_id)
+    events = list(events_query)
+    if events:
+        logger.info(f'Got following events fetched: {events}')
+    for event in events:
+        logger.info(f'converting and deleting event: {event}')
+        response.append(event.to_dict()['Body'])
+    events_query.delete(bulk=True)
+    return response
 
 
+@db_session
 @router.post('/update_settings')
-async def update_player_setting():
-    return {'message': 'Hello world'}
+async def update_players_settings(
+    data: UpdateSettingsIn, auth=Depends(lua_auth)
+):
+    steam_ids = [player.steam_id for player in data.players]
+    players_settings_dict = {
+        int(player.steam_id): player.settings for player in data.players
+    }
+    players = process_incoming_players(steam_ids)
+    for player in players.values():
+        player.settings = players_settings_dict[player.steam_id]
+    return Response(status_code=200)
 
 
+@db_session
 @router.post('/script_errors')
-async def script_errors():
-    return {'message': 'Hello world'}
+async def script_error_report(data: ScriptErrorIn, auth=Depends(lua_auth)):
+    for stack, error_count in data.errors.items():
+        existing_error = ScriptError.get(stack=stack, match_id=data.match_id)
+        if not existing_error:
+            ScriptError(stack=stack, match_id=data.match_id, count=error_count)
+        else:
+            existing_error.count += error_count
+
+    return Response(status_code=200)

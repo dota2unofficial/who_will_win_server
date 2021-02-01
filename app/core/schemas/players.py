@@ -54,3 +54,8 @@ class PlayerAfterMatch(BaseModel):
     other_players_AvgMMR: int
     early_leaver: Optional[bool]
     mastery: Optional[str]
+
+
+class PlayersUpdateSettings(BaseModel):
+    steam_id: str
+    settings: dict

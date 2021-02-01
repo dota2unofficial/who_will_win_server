@@ -2,7 +2,7 @@ from typing import List, Dict, Optional
 
 from pydantic import BaseModel
 
-from .players import PlayerAfterMatch
+from .players import PlayerAfterMatch, PlayersUpdateSettings
 
 
 class BeforeMatchIn(BaseModel):
@@ -53,3 +53,20 @@ class AfterMatchPlayerBased(BaseModel):
     match_id: int
     isPvp: bool
     team: AfterMatchTeamSeparated
+
+
+class AfterMatchPlayerBasedUpdate(AfterMatchPlayerBased):
+    team: AfterMatchTeam
+
+
+class PollEventsIn(BaseModel):
+    match_id: int
+
+
+class UpdateSettingsIn(BaseModel):
+    players: List[PlayersUpdateSettings]
+
+
+class ScriptErrorIn(BaseModel):
+    match_id: int
+    errors: Dict[str, int]
