@@ -72,3 +72,10 @@ def get_bp_levelup_reward(level: int) -> int:
 
 def get_bp_levelup_fortune_reward(level: int) -> int:
     return 1
+
+
+def keys_lower(obj: dict):
+    new_dict = {}
+    for key, value in obj.items():
+        new_dict[key[0].lower() + key[1:]] = value
+    return new_dict

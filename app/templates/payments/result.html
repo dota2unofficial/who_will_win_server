@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% if session_id is not none %}
+    <div class="result successful-payment"></div>
+{% else %}
+    <div class="result failed-payment"></div>
+{% endif %}
+{% endblock %}
