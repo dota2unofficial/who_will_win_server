@@ -58,7 +58,7 @@ class PaymentMetaData:
 def get_payment_information(
     payment_kind: str,
     currency: str
-) -> Tuple(str, int):
+) -> Tuple[str, int]:
     def get_price(yuan: int, usd: int):
         return {
             'usd': usd,

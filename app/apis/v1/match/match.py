@@ -22,9 +22,8 @@ from ....core.schemas.matchs import (
     ScriptErrorIn
 )
 from ....core.schemas.players import PlayerBeforeMatch
-from ....core.models.matchs import MatchTeam, MatchEvent
+from ....core.models.matchs import MatchTeam, MatchEvent, ScriptError
 from ....core.models.players import MatchPlayer
-from ....core.models.errors import ScriptError
 from .manager import record_team_players_rating, record_best_time
 from .actions import (
     process_incoming_players,
