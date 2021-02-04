@@ -1,0 +1,73 @@
+{% extends "statistics/statistics_base.html" %}
+
+{% block main %}
+    <canvas id="myChart"></canvas>
+{% endblock %}
+
+{% block extra_js %}
+    {{ super() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: ["{{ dates_repr | join('\", \"') |safe }}"],
+                datasets: [{
+                    fill: false,
+                    label: 'Match Count',
+                    backgroundColor: 'rgb(194, 98, 48)',
+                    borderColor: 'rgba(194, 98, 48, 0.5)',
+                    data: {{ match_counts_repr}}
+                }]
+            },
+
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    fontColor: '#e8bf6a',
+                    text: 'Match Count Stats'
+                },
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            color: "white"
+                        },
+                        scaleLabel: {
+							display: true,
+                            fontColor: '#e8bf6a',
+							labelString: 'Match Count'
+						},
+                        ticks: {
+                            fontColor: '#e8bf6a'
+                        },
+
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            color: "white"
+                        },
+                        scaleLabel: {
+							display: true,
+                            fontColor: '#e8bf6a',
+							labelString: 'Date'
+						},
+                        ticks: {
+                            fontColor: '#e8bf6a'
+                        },
+                    }]
+                },
+                legend: {
+                    labels: {
+                        // This more specific font property overrides the global property
+                        fontColor: '#e8bf6a'
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

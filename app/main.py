@@ -6,9 +6,9 @@ from fastapi.staticfiles import StaticFiles
 from .core.settings import settings
 from .libs.logging import logger
 
-from .apis.v1.admin.admin import router as admin_routers
 from .apis.v1.match.match import router as match_routers
 from .apis.v1.payment.payment import router as payment_routers
+from .apis.v1.admin.urls import router as admin_routers
 
 if not bool(os.getenv('TEST_ENV', False)):
     app = FastAPI(
@@ -38,20 +38,21 @@ def index():
 
 
 app.include_router(
-    admin_routers,
-    tags=["Admin"]
-)
-
-app.include_router(
     match_routers,
-    prefix="/api/lua/match",
-    tags=["Match"]
+    prefix='/api/lua/match',
+    tags=['Match']
 )
 
 app.include_router(
     payment_routers,
-    prefix="/api/lua/payment",
-    tags=["Payment"]
+    prefix='/api/lua/payment',
+    tags=['Payment']
+)
+
+app.include_router(
+    admin_routers,
+    prefix='/admin',
+    tags=['Admin']
 )
 
 

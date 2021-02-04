@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<span class="stats-label">
+Statistics on
+</span>
+<form style="display: inline;" action="/admin/statistics">
+    <select class="form-control form-control-inline" name="map_name" onchange="this.form.submit()">
+        {% for map_name in map_names %}
+        <option {% if map_name == selected_map %} selected {% endif %}>{{map_name}}</option>
+        {% endfor %}
+    </select>
+
+</form>
+&nbsp;&nbsp;
+<span class="since-des">
+since {{from_date | string}}
+</span>
+<hr>
+
+{% block main %}
+{% endblock %}
+
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

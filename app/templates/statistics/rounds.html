@@ -1,0 +1,16 @@
+{% extends "statistics/statistics_base.html" %}
+
+{% block main %}
+    <h3>Hardest round</h3>
+    {% for count, name in hardest_round %}
+        <li>{{ count }} - {{ name }}</li>
+    {% endfor %}
+    <hr>
+    {% if map_name != "ffa" %}
+    <h3>Hardest totem</h3>
+    {% for count, name in hardest_totem %}
+        <li>{{ count }} - {{ name }}</li>
+    {% endfor %}
+    <hr>
+    {% endif %}
+{% endblock %}

@@ -8,7 +8,7 @@ from fastapi.responses import HTMLResponse
 from ....libs.logging import logger
 from ....core.schemas.payments import PaymentCreate
 from ....core.settings import settings
-from ..admin.admin import templates
+from ..admin.templates import templates
 from .manager import (
     PaymentMetaData,
     create_payment_request,

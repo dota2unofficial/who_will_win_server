@@ -30,34 +30,34 @@ class Achievements(db.Entity):
 class PlayerAchievements(db.Entity):
     _table_ = 'PlayerAchievements'
 
-    SteamId = Required(
+    steam_id = Required(
         int,
         size=64,
         nullable=False,
         column='steam_id'
     )
-    AchievementId = Required(
+    achievement_id = Required(
         int, size=16,
         nullable=False,
         column='achievement_id'
     )
-    Progress = Required(
+    progress = Required(
         int,
         nullable=False
     )
-    Completed = Optional(
+    completed = Optional(
         bool,
         nullable=True,
         column='completed'
     )
-    Tier = Required(
+    tier = Required(
         int,
         size=16,
         nullable=False,
         sql_default='1',
         column='tier'
     )
-    MetaProgress = Optional(
+    meta_progress = Optional(
         IntArray,
         nullable=True,
         column='meta_progress'

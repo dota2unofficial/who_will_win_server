@@ -1,0 +1,20 @@
+{% extends "statistics/statistics_base.html" %}
+
+{% block main %}
+    <table border="1" style="border-collapse: collapse">
+        <tbody>
+        <tr style="font-weight: bold">
+            <td style="width: 100px" align="center">Avg Round</td>
+            <td style="width: 150px" align="center">Name</td>
+            <td style="width: 100px" align="center">Used Count</td>
+        </tr>
+        {% for avg, count, name in masteries_average_round %}
+            <tr class="stats_row">
+                <td style="width: 100px" align="center">{{ "%.2f"|format(avg|float) }}</td>
+                <td style="width: 150px">{{ name }}</td>
+                <td style="width: 100px" align="center">{{ count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

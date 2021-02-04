@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <h1 class="text-center">Script Errors</h1>
+</div>
+
+<div class="container-fluid">
+    {% if errors %}
+    <form action="/admin/script-errors-clear" style="display: flex; justify-content: flex-end;">
+        <button class="btn btn-outline" style="float: right;">Clear</button>
+    </form>
+    {% endif %}
+    <table aria-describedby="script_errors" class="table-bordered" style="margin-top: 5px;">
+        <thead>
+            <tr>
+                <td class="text-center">Script Errors</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% if errors %}
+        {% for err in errors %}
+        <tr>
+            <td style="width: 200px" class="error-header">{{err[2]}} times (in {{err[1]}} matches)</td>
+            <td><pre><code class="language-lua">{{err[0]}}</code></pre></td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td class="text-center">No errors</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>hljs.initHighlightingOnLoad();</script>
+{% endblock %}

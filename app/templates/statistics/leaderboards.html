@@ -1,0 +1,44 @@
+{% extends "statistics/statistics_base.html" %}
+
+{% block main %}
+<h1 class="no-underline">Leaderboards for map "{{ selected_map }}", page {{ page }}</h1>
+By default date equals to current date.<br>
+Page starts (and defaults to) 0 and contain 200 players each.
+<form>
+    <form style="display: inline;" action="/admin/statistics">
+        <input name="page" class="form-control form-control-inline" placeholder="Page [int]">
+        <select name="leaderboard_day" class="form-control form-control-inline">
+            {% for day in range(0, 31) %}
+                <option {% if from_date.day == day %} selected {% endif %}>{{ day }}</option>
+            {% endfor %}
+        </select>
+        <select name="leaderboard_month" class="form-control form-control-inline">
+            {% for month in range(1, 13) %}
+                <option {% if from_date.month == month %} selected {% endif %}>{{ month }}</option>
+            {% endfor %}
+        </select>
+        <select name="leaderboard_year" class="form-control form-control-inline">
+            {% for year in range(2020, 2030) %}
+                <option {% if from_date.year == year %} selected {% endif %}>{{ year }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" class="form-control-inline form-control" value="Submit">
+    </form>
+</form>
+<hr>
+
+<table border="1" style="border-collapse: collapse">
+    <tbody>
+    <tr style="font-weight: bold">
+        <td style="width: 200px" align="center">Steam Id</td>
+        <td style="width: 100px" align="center">MMR value</td>
+    </tr>
+    {% for steam_id, mmr in leaderboard %}
+        <tr class="stats_row">
+            <td style="width: 200px" align="center">{{ steam_id | player_profile_linkify }}</td>
+            <td style="width: 100px" align="center">{{ mmr }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

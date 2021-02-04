@@ -1,0 +1,28 @@
+{% extends "statistics/statistics_base.html" %}
+
+{% block main %}
+    <h2>Battle Pass</h2>
+    <h3>Avg level</h3>
+    {{ avg_level }}
+    <h3>Avg Glory</h3>
+    {{ avg_glory }}
+    <h3>Top 20 players by Level</h3>
+    {% for steam_id, level in top_level%}
+        <li>{{ steam_id | player_profile_linkify }} - {{ level }}</li>
+    {% endfor %}
+    <h3>Top 20 player by Glory</h3>
+    {% for steam_id, level in top_glory%}
+        <li>{{ steam_id | player_profile_linkify }} - {{ level }}</li>
+    {% endfor %}
+    <hr>
+    <h3>Quests</h3>
+    {% for name, avg, count in quests %}
+        <li>{{ name }} - {{ "%.2f"|format(avg|float) }} avg progress over {{ count }} players</li>
+    {% endfor %}
+
+    <h3>Achievements avg progress</h3>
+    {% for name, progress in achievements %}
+        <li>{{ name }} - {{ "%.2f"|format(progress|float) }}</li>
+    {% endfor %}
+    <hr>
+{% endblock %}

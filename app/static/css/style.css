@@ -5,6 +5,16 @@ html {
     text-shadow: 1px 1px 2px black;
 }
 
+.navbar-inverse {
+    background-color: #3c0b0bcc;
+}
+
+footer {
+    background-color: #3c0b0bcc;
+    width: 100%;
+    padding: 15px;
+}
+
 h1, h2, h3, h4 {
     text-shadow: 2px 2px 4px black;
     text-decoration: underline;
@@ -15,6 +25,10 @@ h3 {
     color: #ffc66d;
 }
 
+.no-underline {
+  text-decoration: none;
+}
+
 .error-header {
     text-shadow: 2px 2px 4px black;
     color: #e6e1dc;
@@ -22,6 +36,13 @@ h3 {
 
 table {
     border-color: white;
+    border-collapse: collapse;
+    width: 100%;
+    color: white;
+}
+
+table tr {
+    padding: 10px;
 }
 
 a {
@@ -50,6 +71,7 @@ b {
 body {
     background-image: url("../images/payments/bg.png");
     background-repeat: no-repeat;
+    background-size: cover;
 
     display: flex;
     flex-direction: column;
@@ -273,3 +295,15 @@ div.container-wrapper > .row.content {
   .hljs-strong {
     font-weight: bold;
   }
+
+/* Statistics */
+.since-des, .stats-label {
+    color: white;
+    font-size: 17px;
+}
+
+.form-control-inline {
+    display: inline-block;
+    width: auto;
+}
+
