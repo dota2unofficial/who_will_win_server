@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block script %}
+<script>
+    function content_changed() {
+        console.log("Content changed!")
+        // gather all fields and send them to server
+        const rows = Array.from(document.getElementsByClassName("key_row"))
+        console.log(rows)
+        console.log(typeof rows)
+        let data = {}
+        rows.forEach(row => {
+            const children = row.children
+            data[row.id] = {
+                "Key": children[0].textContent,
+            }
+        })
+        data = JSON.stringify(data)
+        console.log(data, " | ", typeof data)
+        try {
+            fetch(location.href, {method: "POST", body: data, headers: {"content-type": "application/json"}})
+                .then((data) => {
+                    console.log(data);
+                });
+        } catch (error) {
+            console.log("ERROR: ", error)
+        }
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>Dedicated Keys List: </h1>
+<table border="1" style="border-collapse: collapse">
+    <tbody>
+    <tr style="font-weight: bold">
+        <td style="width: 200px">Dedicated Key</td>
+    </tr>
+    {% for key in keys %}
+        <tr contenteditable class="key_row" id="{{ key["id"] }}">
+            <td style="width: 500px">{{ key["Key"] }}</td>
+            <td contenteditable="false">
+                <form method="get" style="margin: auto" action="/admin/remove_dedicated_key">
+                    <input name="dedicated_key_id" type="hidden" value="{{ key.id }}"/>
+                    <input type="submit" value="Remove"/>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<h2>Save changes:</h2>
+<button onclick="content_changed()">Save changes</button>
+
+<h2>Add Price</h2>
+<form action="/admin/add_dedicated_key">
+    <input type="text" name="dedicated_key" required placeholder="Dedicated Key [string]" style="width: 190px">
+    <input type="submit">
+</form>
+{% endblock %}

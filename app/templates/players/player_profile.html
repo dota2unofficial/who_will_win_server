@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Player Profile</h1>
+
+<table style="border: 1px solid  #ffc66d;">
+  <tr>
+      <td style="text-align: center; vertical-align: middle;">
+          <img style="border: 2px solid black" src="{{ profile_link }}" alt="Steam Profile Picture">
+     </td>
+     <td style="text-align: center; vertical-align: middle;">
+          <b>{{ steam_id | steamid_linkify(profile_name) }}</b>
+     </td>
+  </tr>
+</table>
+<br>
+Supporter State: Level <b>{{ player.supporter_state }}</b> {% if player.supporter_enddate %} until <b>{{ player.supporter_enddate }}</b> {% endif %}<br>
+{% if player.supporter_comment %}Comment: {{ player.supporter_comment }}<br> {% endif %}
+Match Count: <b>{{ player.MatchCount }}</b><br>
+<h3>Battlepass Stats</h3>
+Level: <b>{{ player.battlepass_level }}</b>, Exp: <b>{{ player.battlepass_exp }}</b> / <b>{{ exp_required }}</b>, Earned today: <b>{{ player.battlepass_daily_exp }}</b><br>
+Glory: <b>{{ player.battlepass_glory }}</b><br>
+Fortune: <b>{{ player.battlepass_fortune }}</b>, Earned today (from playing): <b>{{ player.battlepass_daily_fortune }}</b><br>
+
+<h3>Ratings</h3>
+MMR: <b>{{ player.rating_ffa }}</b> - <b>{{ player.rating_duos }}</b> - <b>{{ player.rating_squads }}</b><br><br>
+<b>PVE</b>
+<table>
+    <tbody>
+    <tr class="table-header">
+        <td style="width: 100px" align="center"></td>
+        <td style="width: 100px" align="center">FFA</td>
+        <td style="width: 100px" align="center">Duos</td>
+        <td style="width: 100px" align="center">Squads</td>
+    </tr>
+    <tr class="stats_row">
+        <td style="width: 100px" align="center">Round</td>
+        <td style="width: 100px" align="center">{{ player.bestPvE_ffa_round }}</td>
+        <td style="width: 100px" align="center">{{ player.bestPvE_duos_round }}</td>
+        <td style="width: 100px" align="center">{{ player.bestPvE_squads_round }}</td>
+    </tr>
+    <tr class="stats_row">
+        <td style="width: 100px" align="center">Time</td>
+        <td style="width: 100px" align="center">{{ player.bestPvE_ffa_Time }}</td>
+        <td style="width: 100px" align="center">{{ player.bestPvE_duos_Time }}</td>
+        <td style="width: 100px" align="center">{{ player.bestPvE_squads_Time }}</td>
+    </tr>
+    </tbody>
+</table>
+
+<b>PVP</b>
+<table>
+    <tbody>
+    <tr class="table-header">
+        <td style="width: 100px" align="center"></td>
+        <td style="width: 100px" align="center">FFA</td>
+        <td style="width: 100px" align="center">Duos</td>
+        <td style="width: 100px" align="center">Squads</td>
+    </tr>
+    <tr class="stats_row">
+        <td style="width: 100px" align="center">Round</td>
+        <td style="width: 100px" align="center">{{ player.bestPvP_ffa_round }}</td>
+        <td style="width: 100px" align="center">{{ player.bestPvP_duos_round }}</td>
+        <td style="width: 100px" align="center">{{ player.bestPvP_squads_round }}</td>
+    </tr>
+    <tr class="stats_row">
+        <td style="width: 100px" align="center">Time</td>
+        <td style="width: 100px" align="center">{{ player.bestPvP_ffa_Time }}</td>
+        <td style="width: 100px" align="center">{{ player.bestPvP_duos_Time }}</td>
+        <td style="width: 100px" align="center">{{ player.bestPvP_squads_Time }}</td>
+    </tr>
+    </tbody>
+</table>
+
+
+<h3>Quests</h3>
+
+<table>
+<tbody>
+    <tr class="table-header">
+        <td style="width: 100px" align="center">Quest ID</td>
+        <td style="width: 100px" align="center">Added At</td>
+        <td style="width: 80px" align="center">Progress</td>
+        <td style="width: 80px" align="center">Completed</td>
+    </tr>
+    {% for pquest in quests %}
+    <tr class="stats_row">
+        <td style="width: 50px" align="center">{{ pquest.quest_id }}</td>
+        <td style="width: 200px" align="center">{{ pquest.added_at }}</td>
+        <td style="width: 80px" align="center">{{ pquest.progress }}</td>
+        <td style="width: 80px" align="center">{{ pquest.completed }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+<h3>Achievements</h3>
+<table>
+<tbody>
+    <tr class="table-header">
+        <td style="width: 100px" align="center">Achievement ID</td>
+        <td style="width: 80px" align="center">Progress</td>
+        <td style="width: 80px" align="center">Completed</td>
+    </tr>
+    {% for pachievement in achievements %}
+    <tr class="stats_row">
+        <td style="width: 50px" align="center">{{ pachievement.achievementId }}</td>
+        <td style="width: 80px" align="center">{{ pachievement.progress }}</td>
+        <td style="width: 80px" align="center">{{ pachievement.completed }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+<h3>Owned Items</h3>
+<table>
+<tbody>
+    <tr class="table-header">
+        <td style="width: 100px" align="center">Item Name</td>
+        <td style="width: 80px" align="center">Count</td>
+        <td style="width: 80px" align="center">Gem</td>
+    </tr>
+    {% for item in items %}
+    <tr class="stats_row">
+        <td style="width: 50px" align="center">{{ item.item_name | item_sell_linkify }}</td>
+        <td style="width: 80px" align="center">{{ item.count }}</td>
+        <td style="width: 80px" align="center">{{ item.inserted_gem if item.inserted_gem else "" }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+<!-- <h3>Masteries</h3>
+<table>
+<tbody>
+    <tr class="table-header">
+        <td style="width: 100px" align="center">Mastery Name</td>
+        <td style="width: 80px" align="center">Level</td>
+        <td style="width: 80px" align="center">Expiration Date</td>
+    </tr>
+    {% for pmastery in masteries %}
+    <tr class="stats_row">
+        <td style="width: 100px" align="center">{{ pmastery.MasteryName }}</td>
+        <td style="width: 80px" align="center">{{ pmastery.MasteryLevel }}</td>
+        <td style="width: 200px" align="center">{{ pmastery.ExpirationDate if pmastery.ExpirationDate else "" }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table> -->
+<h3>Transactions history</h3>
+<table>
+<tbody>
+    <tr class="table-header">
+        <td style="width: 100px" align="center">Item Name</td>
+        <td style="width: 80px" align="center">Count</td>
+        <td style="width: 200px" align="center">Sell Date</td>
+        <td style="width: 80px" align="center">Glory Cost</td>
+        <td style="width: 80px" align="center">Real Cost</td>
+    </tr>
+    {% for purchase in purchases %}
+    <tr class="stats_row">
+        <td style="width: 100px" align="center">{{ purchase.item_name | item_sell_linkify  }}</td>
+        <td style="width: 80px" align="center">{{ purchase.item_count }}</td>
+        <td style="width: 200px" align="center">{{ purchase.sold_at }}</td>
+        <td style="width: 80px" align="center">{{ purchase.glory_cost if purchase.glory_cost else "" }}</td>
+        <td style="width: 80px" align="center">{{ purchase.real_cost / 100.0 if purchase.real_cost else ""}}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+<h3>Last matches</h3>
+<table>
+<tbody class="match-history">
+    <tr class="table-header">
+        <td style="width: 100px" align="center">Match ID</td>
+        <td style="width: 100px" align="center">Ended At</td>
+        <td style="width: 80px" align="center">Map Name</td>
+        <td style="width: 50px" align="center">MMR Change</td>
+        <td style="width: 100px" align="center">Innate</td>
+        <td align="center">Mastery</td>
+        <td style="width: 100px" align="center">Abilities</td>
+        <td style="width: 200px" align="center">Round Deaths</td>
+        <td style="width: 300px" align="center">Items</td>
+        <td style="width: 100px" align="center">Exp Change</td>
+        <td style="width: 100px" align="center">Glory Change</td>
+    </tr>
+    {% for match in matches %}
+    <tr class="stats_row">
+        <td style="width: 100px" align="center">{{ match[0] }}</td>
+        <td style="width: 100px" align="center">{{ match[1] }}</td>
+        <td style="width: 80px" align="center">{{ match[2] }}</td>
+        <td style="width: 50px" align="center">{{ match[3] - match[4] }}</td>
+        <td style="width: 100px" align="center">{{ match[6] }}</td>
+        <td align="center">{{ match[11] }}</td>
+        <td style="width: 100px" align="center">{{ match[5]|join(", ") }}</td>
+        <td style="width: 300px" align="center">
+            {% for rd in match[7] %}
+                Round <b>{{ rd["round"] }}</b> ({{ rd["name"] }})<br>
+            {% endfor %}
+        </td>
+        <td style="width: 200px" align="center">{{ match[8]|join(", ") }}</td>
+        <td style="width: 100px" align="center">{{ match[9] }}</td>
+        <td style="width: 100px" align="center">{{ match[10] }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+{% endblock %}

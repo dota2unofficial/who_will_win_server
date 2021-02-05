@@ -1,5 +1,7 @@
 import math
+from typing import Final, Optional
 
+from aiohttp import ClientSession
 
 from .constants import (
     BP_MINIMAL_REQUIRED_EXP,
@@ -7,6 +9,9 @@ from .constants import (
     CONST_PVE_BOSS_MULTIPLIER,
     CONST_PVE_ROUND_EXP
 )
+from ..core.models.players import Player
+
+__Session: Final = ClientSession()
 
 
 def steam_id_to_str(obj: dict):
@@ -79,3 +84,36 @@ def keys_lower(obj: dict):
     for key, value in obj.items():
         new_dict[key[0].lower() + key[1:]] = value
     return new_dict
+
+
+def set_battle_pass_exp(new_exp: int, db_player: Player):
+    """ REQUIRES PRESENT DB SESSION """
+    # logger.info(f"<{db_player.steamId}> Set battle exp: {new_exp}")
+    required_exp = get_bp_required_exp(db_player.battlepass_level)
+    while new_exp >= required_exp:
+        # logger.info(f"[Level up]: {new_exp}/{required_exp}")
+        db_player.battlepass_exp = new_exp - required_exp
+        db_player.battlepass_level += 1
+        glory_reward = get_bp_levelup_reward(db_player.battlepass_level)
+        db_player.battlepass_glory += glory_reward
+        db_player.battlepass_fortune += get_bp_levelup_fortune_reward(
+            db_player.battlepass_level
+        )
+        new_exp -= required_exp
+        required_exp = get_bp_required_exp(db_player.battlepass_level)
+
+    # logger.info(f"Set {new_exp}")
+    db_player.battlepass_exp = new_exp
+
+
+def add_battle_pass_exp(add_exp: int, db_player: Player):
+    """ REQUIRES PRESENT DB SESSION """
+    new_exp = db_player.battlepass_exp + add_exp
+    # logger.info(f"Adding exp: {add_exp}, new exp: {new_exp}")
+    set_battle_pass_exp(new_exp, db_player)
+
+
+async def http_get(link: str, data: Optional[dict] = None) -> Optional[dict]:
+    result = await __Session.get(link, data=data)
+    if result.status == 200:
+        return await result.json()

@@ -19,13 +19,23 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_HOST: str
     DB_PORT: str
-    STEAM_WEBAPI_KEY: str
+    STEAM_WEBAPI_KEY: str = '93A018F329C155FB240CB6D286748067'
     STRIPE_SECRET: str = (
         'sk_test_51HL7fDGFJ5EJYxIJ7jXNoasDDExu2rs6hXiItU46IMu' +
         'CIyBf2KQ0coSZoQWAm2k3PJogolrE3OOIXkkVdZaV9pSs00CWxI3bvZ'
     )
+    STRIPE_PUBLISHABLE: str = (
+        'pk_test_51HL7fDGFJ5EJYxIJZpvQllPVtm3cutz37DqQGXFGRbKG28' +
+        'C7KcW9oAd3u0UO2vT4l3kGepDdzjGJ3Kpp7BwkVJG700EhVFEGZ6'
+    )
     PAYMENT_RETURN_URL: str = 'http://localhost:5000/'
     STRIPE_WEBHOOK_SECRET: str = 'whsec_FQkgYFcA5Z7HIwdEGhLRDgnl9gzRlSy9'
+    ADMIN_USER: str = 'admin'
+    ADMIN_PASS: str = 'admin'
+    DEDICATED_USER: str = 'admin'
+    DEDICATED_PASS: str = 'admin'
+    PAYMENT_USER: str = 'admin'
+    PAYMENT_PASS: str = 'admin'
 
     async def db_connect(self):
         print(

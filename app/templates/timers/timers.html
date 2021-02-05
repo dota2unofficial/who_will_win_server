@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <h1>Timers Performance</h1>
+    <form action="/admin/timers-clear">
+        <button>Clear</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script>hljs.initHighlightingOnLoad();</script>
+    <table border="1" style="border-collapse: collapse; border-color: white">
+        <tbody>
+
+        {% for timer in timers %}
+        <tr>
+            <td style="width: 400px"><pre><code class="language-lua">{{ timer.line }}</code></pre></td>
+            <td style="padding-left: 5px; padding-right: 5px"><b>{{ "%.2f"|format(timer.average_time|float)}}</b> ms</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -18,8 +18,7 @@ from ....libs.functions import clamp
 from ....libs.functions import (
     get_bp_pve_exp,
     get_bp_required_exp,
-    get_bp_levelup_reward,
-    get_bp_levelup_fortune_reward
+    set_battle_pass_exp
 )
 from ....core.schemas.matchs import AfterMatchPlayerBased, AfterMatchTeam
 from ....core.models.matchs import Match, MatchTeam
@@ -53,26 +52,6 @@ def record_best_time(
             if team.time > old_time or old_time == 0:
                 setattr(db_player, f"{mode}_{db_map_name}_round", team.round)
                 setattr(db_player, f"{mode}_{db_map_name}_time", team.time)
-
-
-def set_battle_pass_exp(new_exp: int, db_player: Player):
-    """ REQUIRES PRESENT DB SESSION """
-    # logger.info(f"<{db_player.steamId}> Set battle exp: {new_exp}")
-    required_exp = get_bp_required_exp(db_player.battlepass_level)
-    while new_exp >= required_exp:
-        # logger.info(f"[Level up]: {new_exp}/{required_exp}")
-        db_player.battlepass_exp = new_exp - required_exp
-        db_player.battlepass_level += 1
-        glory_reward = get_bp_levelup_reward(db_player.battlepass_level)
-        db_player.battlepass_glory += glory_reward
-        db_player.battlepass_fortune += get_bp_levelup_fortune_reward(
-            db_player.battlepass_level
-        )
-        new_exp -= required_exp
-        required_exp = get_bp_required_exp(db_player.battlepass_level)
-
-    # logger.info(f"Set {new_exp}")
-    db_player.battlepass_exp = new_exp
 
 
 def record_battle_pass_progress(

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block script %}
+<script>
+    function content_changed() {
+        console.log("Content changed! ")
+        // gather all fields and send them to server
+        const rows = Array.from(document.getElementsByClassName("price_row"))
+        console.log(rows)
+        console.log(typeof rows)
+        let data = {}
+        rows.forEach(row => {
+            const children = row.children
+            data[row.id] = {
+                "payment_kind": children[0].textContent,
+                "price_usd": parseInt(children[1].textContent),
+                "price_cny": parseInt(children[2].textContent),
+                "item_name": children[3].textContent,
+            }
+        })
+        data = JSON.stringify(data)
+        console.log(data, " | ", typeof data)
+        try {
+            fetch(location.href, {method: "POST", body: data, headers: {"content-type": "application/json"}})
+                .then((data) => {
+                    console.log(data);
+                });
+        } catch (error) {
+            console.log("ERROR: ", error)
+        }
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>Prices List: </h1>
+<table>
+    <tbody>
+    <tr style="font-weight: bold">
+        <td style="width: 400px">Payment Kind</td>
+        <td style="width: 200px">Price USD</td>
+        <td style="width: 200px">Price CNY</td>
+        <td style="width: 400px">Purchased Item</td>
+    </tr>
+    {% for price in price_list %}
+        <tr contenteditable class="price_row" id="{{ price["id"] }}">
+            <td style="width: 400px">{{ price["payment_kind"] }}</td>
+            <td style="width: 200px">{{ price["price_usd"] }}</td>
+            <td style="width: 200px">{{ price["price_cny"] }}</td>
+            <td style="width: 400px">{{ price["item_name"] }}</td>
+            <td contenteditable="false">
+                <form method="get" style="margin: auto" action="/admin/remove_price">
+                    <input name="price_id" type="hidden" value="{{ price.id }}"/>
+                    <input type="submit" value="Remove"/>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<h2>Save changes:</h2>
+<button onclick="content_changed()">Save changes</button>
+
+<h2>Add Price</h2>
+<form action="/admin/add_price">
+    <input type="text" name="payment_name" required placeholder="Payment Kind [string]" style="width: 190px">
+    <input type="text" name="price_usd" required placeholder="Price USD [int]" style="width: 290px">
+    <input type="text" name="price_cny" placeholder="Price CNY [int]" style="width: 390px">
+    <input type="text" name="item_name" required placeholder="Purchased Item Name [str]" style="width: 400px">
+    <input type="submit">
+</form>
+{% endblock %}

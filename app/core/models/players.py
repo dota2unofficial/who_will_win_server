@@ -29,6 +29,62 @@ class Player(db.Entity):
         column='rating_squads'
     )
 
+    bestPvE_ffa_round = Optional(
+        int,
+        column='bestPvE_ffa_round'
+    )
+    bestPvE_ffa_time = Optional(
+        float,
+        sql_type='double precision',
+        column='bestPvE_ffa_time'
+    )
+    bestPvE_duos_round = Optional(
+        int,
+        column='bestPvE_duos_round'
+    )
+    bestPvE_duos_time = Optional(
+        float,
+        sql_type='double precision',
+        column='bestPvE_duos_time'
+    )
+    bestPvE_squads_round = Optional(
+        int,
+        column='bestPvE_squads_round'
+    )
+    bestPvE_squads_time = Optional(
+        float,
+        sql_type='double precision',
+        column='bestPvE_squads_time'
+    )
+
+    bestPvP_ffa_round = Optional(
+        int,
+        column='bestPvP_ffa_round'
+    )
+    bestPvP_ffa_time = Optional(
+        float,
+        sql_type='double precision',
+        column='bestPvP_ffa_time'
+    )
+    bestPvP_duos_round = Optional(
+        int,
+        column='bestPvP_duos_round'
+    )
+    bestPvP_duos_time = Optional(
+        float,
+        sql_type='double precision',
+        column='bestPvP_duos_time'
+    )
+    bestPvP_squads_round = Optional(
+        int,
+        column='bestPvP_squads_round'
+    )
+    bestPvP_squads_time = Optional(
+        float,
+        sql_type='double precision',
+        column='bestPvP_squads_time'
+    )
+
     supporter_enddate = Optional(
         datetime,
         sql_type='timestamp',

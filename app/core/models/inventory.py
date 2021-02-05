@@ -19,7 +19,7 @@ class PlayerInventory(db.Entity):
         sql_type='varchar(100)',
         column='item_name'
     )
-    Count = Optional(
+    count = Optional(
         int,
         size=16,
         sql_default=0,

@@ -64,7 +64,7 @@ DEFAULT_PLAYER_VALUES: Final = {
     'battlepass_exp': 0,
     'battlepass_glory': 0,
     'battlepass_level': 0,
-    'battlepass_dailyExp': 0,
+    'battlepass_daily_exp': 0,
     'battlepass_fortune': 10,
     'battlepass_daily_fortune': 0,
     'match_count': 0,

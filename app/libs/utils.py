@@ -1,12 +1,13 @@
 from pony.orm import db_session
 
 
-@db_session
 def optional_session(func):
-    def wrapped(*args, create_session=False, **kwargs):
-        if create_session:
+    with db_session:
+        def wrapped(*args, create_session=False, **kwargs):
+            if create_session:
+                with db_session:
+                    return func(*args, **kwargs)
             return func(*args, **kwargs)
-        return func(*args, **kwargs)
 
     return wrapped
 
