@@ -3,8 +3,8 @@
 {% block content %}
 <h1> Player Management </h1>
 <h2>Add Item</h2>
-If item already exists in player inventory, it's count will be <b>increased</b> by specified <b>Item Count</b>.
-<b>Item Count</b> defaults to 1.
+If item already exists in player inventory, it's count will be <b>increased</b> by specified <b>item_count</b>.
+<b>item_count</b> defaults to 1.
 <form action="/admin/management/add_item">
     <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
     <input type="text" name="item_name" required placeholder="Item Name (from config) [string]" style="width: 190px">
@@ -14,8 +14,8 @@ If item already exists in player inventory, it's count will be <b>increased</b> 
 </form>
 
 <h2>Delete Item</h2>
-If item already exists in player inventory, it's count will be <b>increased</b> by specified <b>Item Count</b>.
-<b>Item Count</b> defaults to 1.
+If item already exists in player inventory, it's count will be <b>increased</b> by specified <b>item_count</b>.
+<b>item_count</b> defaults to 1.
 <form action="/admin/management/delete_item">
     <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
     <input type="text" name="item_name" required placeholder="Item Name (from config) [string]" style="width: 190px">

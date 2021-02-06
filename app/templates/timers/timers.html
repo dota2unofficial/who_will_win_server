@@ -11,9 +11,8 @@
 
 {% block script %}
     <script>hljs.initHighlightingOnLoad();</script>
-    <table border="1" style="border-collapse: collapse; border-color: white">
+    <table>
         <tbody>
-
         {% for timer in timers %}
         <tr>
             <td style="width: 400px"><pre><code class="language-lua">{{ timer.line }}</code></pre></td>

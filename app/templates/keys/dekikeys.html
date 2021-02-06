@@ -12,7 +12,7 @@
         rows.forEach(row => {
             const children = row.children
             data[row.id] = {
-                "Key": children[0].textContent,
+                "key": children[0].textContent,
             }
         })
         data = JSON.stringify(data)
@@ -31,14 +31,14 @@
 
 {% block content %}
 <h1>Dedicated Keys List: </h1>
-<table border="1" style="border-collapse: collapse">
+<table>
     <tbody>
     <tr style="font-weight: bold">
         <td style="width: 200px">Dedicated Key</td>
     </tr>
     {% for key in keys %}
         <tr contenteditable class="key_row" id="{{ key["id"] }}">
-            <td style="width: 500px">{{ key["Key"] }}</td>
+            <td style="width: 500px">{{ key["key"] }}</td>
             <td contenteditable="false">
                 <form method="get" style="margin: auto" action="/admin/remove_dedicated_key">
                     <input name="dedicated_key_id" type="hidden" value="{{ key.id }}"/>

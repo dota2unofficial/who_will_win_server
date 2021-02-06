@@ -5,7 +5,7 @@
     <script>
         const stripe = Stripe("{{ publishable_key }}");
         stripe.redirectToCheckout({
-            sessionId: "{{ session_id }}",
+            session_id: "{{ session_id }}",
         });
     </script>
 {% endblock %}

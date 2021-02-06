@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Achievements:</h1>
 
-<table border="1" style="border-collapse: collapse">
+<table>
     <tbody>
     <tr style="font-weight: bold">
         <td style="width: 200px">Name</td>
@@ -105,10 +105,10 @@ Rewards field:<br>
         rows.forEach(row => {
             const children = row.children
             data[row.id] = {
-                "Name": children[0].textContent,
-                "Type": children[1].textContent,
-                "Description": JSON.parse(children[2].textContent),
-                "Reward": JSON.parse(children[3].textContent),
+                "name": children[0].textContent,
+                "type": children[1].textContent,
+                "description": JSON.parse(children[2].textContent),
+                "reward": JSON.parse(children[3].textContent),
             }
         })
         data = JSON.stringify(data)
