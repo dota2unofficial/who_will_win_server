@@ -184,3 +184,71 @@ masteries_average_round = """
     GROUP BY Name
     ORDER BY Average desc
 """.lstrip()
+
+sample_functions = """
+    CREATE OR REPLACE FUNCTION sample_func() RETURNS BOOLEAN
+    AS $_$
+    BEGIN
+        RETURN TRUE;
+    END;
+    $_$ LANGUAGE PLPGSQL;
+"""
+
+replace_player_quests = """
+    CREATE OR REPLACE FUNCTION replace_player_quests() RETURNS BOOLEAN AS $$
+    DECLARE
+        rec RECORD;
+        quests integer[] := (select array_agg(id::integer) from "Quests");
+        player_quest_ids integer[];
+        available_quest_ids integer[];
+        steam_ids bigint[] := (
+            select array_agg(distinct steam_id::bigint) from "PlayerQuests"
+        );
+        m_steam_id bigint;
+        iter int := 1;
+    BEGIN
+        LOCK TABLE "Quests" IN SHARE MODE;
+        --raise notice 'quest ids list: % %', quests, array_length(quests, 1);
+        foreach m_steam_id in array steam_ids loop
+            player_quest_ids = (
+                select array_agg(plq.quest_id::integer)
+                from "PlayerQuests" plq where plq.steam_id = m_steam_id
+            );
+            --raise notice
+                'player quests ids % %',
+                player_quest_ids,
+                array_length(player_quest_ids, 1);
+            available_quest_ids = (
+                select array_agg(unnest(arr) order by random()) from (
+                    select unnest(quests) except select unnest(
+                        player_quest_ids
+                    )
+                ) arr
+            );
+
+            --raise notice
+                'available quest ids of % are %, len: %',
+                m_steam_id,
+                available_quest_ids,
+                array_length(available_quest_ids, 1);
+            iter := 1;
+            FOR rec IN (
+                SELECT id, steam_id, quest_id, added_at
+                FROM "PlayerQuests" plq where plq.steam_id=m_steam_id
+            ) LOOP
+                --raise notice
+                    'available array value: [%] %', iter,
+                    available_quest_ids[iter];
+                update "PlayerQuests" set
+                    quest_id = available_quest_ids[iter],
+                    added_at=current_timestamp,
+                    progress=0,
+                    completed=null
+                where id = rec.id;
+                iter := iter + 1;
+            end loop;
+        end loop;
+        RETURN TRUE;
+    END;
+    $$ LANGUAGE PLPGSQL;
+""".lstrip()

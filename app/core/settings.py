@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     PAYMENT_USER: str = 'admin'
     PAYMENT_PASS: str = 'admin'
 
-    async def db_connect(self):
+    def db_connect(self):
         print(
             f'Connecting to {self.DB_PROVIDER} databse ' +
             f'with user: {self.DB_USER}, ' +
@@ -84,10 +84,10 @@ class Settings(BaseSettings):
             print(f'Failed in connectiong to database: {e}')
             logger.error(f'Failed in connectiong to database: {e}')
 
-    async def shutdown(self):
+    def shutdown(self):
         db.disconnect()
 
-    async def stripe_connect(self):
+    def stripe_connect(self):
         secret_key = self.STRIPE_SECRET
         stripe.api_key = secret_key
         logger.info('Stripe Key has been set.')

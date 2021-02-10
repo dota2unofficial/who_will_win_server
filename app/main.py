@@ -59,13 +59,13 @@ app.include_router(
 @app.on_event('startup')
 async def init_setting():
     logger.info('[startup] process started')
-    await settings.stripe_connect()
-    await settings.db_connect()
+    settings.stripe_connect()
+    settings.db_connect()
     logger.info('[startup] process finished')
 
 
 @app.on_event('shutdown')
 async def on_shutdown():
     await settings.close_htts_session()
-    await settings.shutdown()
+    settings.shutdown()
     logger.info('[shutdown] process finished')
