@@ -14,12 +14,13 @@ from ....libs.constants import (
     CONST_FORTUNE_GAME_REWARD,
     CONST_FORTUNE_DAILY_LIMIT
 )
-from ....libs.functions import clamp
 from ....libs.functions import (
+    clamp,
     get_bp_pve_exp,
     get_bp_required_exp,
     set_battle_pass_exp
 )
+from ....libs.utils import exception
 from ....core.schemas.matchs import AfterMatchPlayerBased, AfterMatchTeam
 from ....core.models.matchs import Match, MatchTeam
 from ....core.models.players import Player, MatchPlayer
@@ -146,6 +147,7 @@ def record_battle_pass_progress(
     return bp_changes
 
 
+@exception(logger)
 def record_team_players_rating(
     data: AfterMatchPlayerBased,
     rating_field_name: str,

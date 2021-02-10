@@ -17,7 +17,7 @@
                 "POSTGRES_PASSWORD":"postgres",
                 "DATABASE_NAME":"www",
                 "POSTGRES_PORT":"5432",
-                "DEBUG_ENV":"False"
+                "TEST_ENV":"True"
             },
             "jinja": true
         }

@@ -26,29 +26,35 @@ from ....core.models.patchnotes import Patchnotes
 
 @optional_session
 def process_incoming_players(
-    steam_ids: List[str], key_type=str, **kwargs
+    steam_ids: List[str],
+    key_type=str,
+    **kwargs
 ) -> dict:
     steam_ids_as_int = [int(steam_id) for steam_id in steam_ids]
     players = list(Player.select(lambda p: p.steam_id in steam_ids_as_int))
     present_steam_ids = [player.steam_id for player in players]
     # insert new players, excluding bots
     for steam_id in steam_ids_as_int:
-        if steam_id == 0:
-            pass  # continue
         if steam_id not in present_steam_ids:
-            # print("inserting new steam_id: ", steam_id)
+            print('inserting new steam_id: ', steam_id)
             added_player = Player(
-                steam_id=steam_id, settings="{}", supporter_state=0,
+                steam_id=steam_id,
+                settings='{}',
+                supporter_state=0,
                 **DEFAULT_PLAYER_VALUES
             )
             players.append(added_player)
-    ret_players = {key_type(player.steam_id): player for player in players}
+    ret_players = {
+        key_type(player.steam_id): player for player in players
+    }
     return ret_players
 
 
 @optional_session
 def get_supporter_info_dict(
-    player: dict, current_date: datetime, db_player: Player
+    player: dict,
+    current_date: datetime,
+    db_player: Player
 ) -> dict:
     # since supporter level influences some other values,
     #  we need to set it to actual value
@@ -63,7 +69,7 @@ def get_supporter_info_dict(
         end_date = None
     return {
         'level': level,
-        'endDate': end_date
+        'end_date': end_date
     }
 
 
@@ -138,7 +144,7 @@ def get_leaderboards(*args):
         for lb_map in lb_maps.keys():
             db_map_name = CONST_DB_MAP_NAMES[lb_map]
             main_field_name = f'{lb_type}_{db_map_name}'  # e.g. rating_ffa
-            main_field_name = main_field_name[0].upper() + main_field_name[1:]
+            main_field_name = main_field_name[0] + main_field_name[1:]
 
             # every field needs a '' because it's uppercase
             #  and postgres treats names as lowercase without quotes

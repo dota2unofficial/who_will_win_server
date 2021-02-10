@@ -6,9 +6,9 @@ MAP_NAMES: Final = [
 ]
 
 CONST_DB_MAP_NAMES: Final = {
-    'ffa': 'FFA',
-    'duos': 'Duos',
-    'squads': 'Squads',
+    'ffa': 'ffa',
+    'duos': 'duos',
+    'squads': 'squads',
 }
 
 CONST_PLAYERS_PER_TEAM: Final = {
@@ -113,71 +113,73 @@ CONST_STAT_TYPES = {
 }
 
 
-CHANGELOG_URL = "https://steamcommunity.com/sharedfiles/filedetails/changelog/2141071809"
+CHANGELOG_URL = (
+    'https://steamcommunity.com/sharedfiles/filedetails/changelog/2141071809'
+)
 
 
 MONTHS = {
-    "english": {
-        "Jan": 1,
-        "Feb": 2,
-        "Mar": 3,
-        "Apr": 4,
-        "May": 5,
-        "Jul": 6,
-        "Jun": 7,
-        "Aug": 8,
-        "Sep": 9,
-        "Oct": 10,
-        "Nov": 11,
-        "Dec": 12,
+    'english': {
+        'Jan': 1,
+        'Feb': 2,
+        'Mar': 3,
+        'Apr': 4,
+        'May': 5,
+        'Jul': 6,
+        'Jun': 7,
+        'Aug': 8,
+        'Sep': 9,
+        'Oct': 10,
+        'Nov': 11,
+        'Dec': 12,
     },
-    "russian": {
-        "янв": 1,
-        "фев": 2,
-        "мар": 3,
-        "апр": 4,
-        "мая": 5,
-        "июл": 6,
-        "июн": 7,
-        "авг": 8,
-        "сен": 9,
-        "окт": 10,
-        "ноя": 11,
-        "дек": 12,
+    'russian': {
+        'янв': 1,
+        'фев': 2,
+        'мар': 3,
+        'апр': 4,
+        'мая': 5,
+        'июл': 6,
+        'июн': 7,
+        'авг': 8,
+        'сен': 9,
+        'окт': 10,
+        'ноя': 11,
+        'дек': 12,
     },
-    "schinese": {
-        "1": 1,
-        "2": 2,
-        "3": 3,
-        "4": 4,
-        "5": 5,
-        "6": 6,
-        "7": 7,
-        "8": 8,
-        "9": 9,
-        "10": 10,
-        "11": 11,
-        "12": 12,
+    'schinese': {
+        '1': 1,
+        '2': 2,
+        '3': 3,
+        '4': 4,
+        '5': 5,
+        '6': 6,
+        '7': 7,
+        '8': 8,
+        '9': 9,
+        '10': 10,
+        '11': 11,
+        '12': 12,
     }
 }
 
 
 UPDATE_KEYWORDS = {
-    "english": "Update: ",
-    "russian": "Обновление: ",
-    "schinese": "更新于：",
+    'english': 'Update: ',
+    'russian': 'Обновление: ',
+    'schinese': '更新于：',
 }
 
 
 DELIMITER = {
-    "english": " @ ",
-    "russian": " в ",
-    "schinese": " ",
+    'english': ' @ ',
+    'russian': ' в ',
+    'schinese': ' ',
 }
 
 
 DATE_SPLITTER = {
-    "english": " ",
-    "russian": " ",
-    "schinese": "月",
+    'english': ' ',
+    'russian': ' ',
+    'schinese': '月',
 }

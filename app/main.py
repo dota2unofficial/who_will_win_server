@@ -10,7 +10,7 @@ from .apis.v1.match.match import router as match_routers
 from .apis.v1.payment.payment import router as payment_routers
 from .apis.v1.admin.urls import router as admin_routers
 
-if not bool(os.getenv('TEST_ENV', False)):
+if bool(os.getenv('TEST_ENV', False)):
     app = FastAPI(
         title='Who_Will_Win API',
         description='This is a web server for Who_Will_Win custom game',
@@ -33,7 +33,7 @@ app.mount(
 
 
 @app.get('/')
-def index():
+async def index():
     return {'message': 'Hello world'}
 
 

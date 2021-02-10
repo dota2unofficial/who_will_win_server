@@ -50,58 +50,59 @@ async def before_match(data: BeforeMatchIn, auth=Depends(lua_auth)):
             status_code=403,
             detail=f'Map name <{data.map_name}> does not belong to us!'
         )
-
-    players = process_incoming_players(data.players)
-    players_dict = {
-        steam_id: PlayerBeforeMatch.from_orm(
-            player).dict() for steam_id, player in players.items()
-    }
-    resp_players = []
-    steam_ids_int = [int(steam_id) for steam_id in data.players]
-
-    achievements_batch = get_players_achievements_batch(steam_ids_int)
-    gift_codes_batch = get_players_gift_codes_batch(steam_ids_int)
-
-    for steam_id, player in players_dict.items():
-        player['match_count'] = player.pop('match_count')
-        bp_level = player.pop('battlepass_level')
-        supporter_state = get_supporter_info_dict(
-            player,
-            current_date,
-            players[steam_id]
-        )
-        supporter_level = supporter_state['level']
-        player['supporter_state'] = supporter_state
-
-        player['rating'] = {
-            'ffa': player.pop('rating_ffa'),
-            'duos': player.pop('rating_duos'),
-            'squads': player.pop('rating_squads'),
+    with db_session:
+        players = process_incoming_players(data.players)
+        players_dict = {
+            steam_id: PlayerBeforeMatch.from_orm(player).dict() for (
+                steam_id, player
+            ) in players.items()
         }
+        resp_players = []
+        steam_ids_int = [int(steam_id) for steam_id in data.players]
 
-        player['achievements'] = achievements_batch.get(steam_id, [])
-        player['quests'] = get_player_quests(steam_id, supporter_level)
-        player['gift_codes'] = gift_codes_batch.get(steam_id, [])
+        achievements_batch = get_players_achievements_batch(steam_ids_int)
+        gift_codes_batch = get_players_gift_codes_batch(steam_ids_int)
 
-        player['progress'] = {
-            'level': bp_level,
-            'glory': player.pop('battlepass_glory'),
-            'current_exp': player.pop('battlepass_exp'),
-            'required_exp': get_bp_required_exp(bp_level),
-            'earned_exp': player.pop('battlepass_dailyexp'),
-            'fortune': player.pop('battlepass_fortune'),
-            'earned_fortune': player.pop('battlepass_dailyfortune')
+        for steam_id, player in players_dict.items():
+            player['match_count'] = player.pop('match_count')
+            bp_level = player.pop('battlepass_level')
+            supporter_state = get_supporter_info_dict(
+                player,
+                current_date,
+                players[steam_id]
+            )
+            supporter_level = supporter_state['level']
+            player['supporter_state'] = supporter_state
+
+            player['rating'] = {
+                'ffa': player.pop('rating_ffa'),
+                'duos': player.pop('rating_duos'),
+                'squads': player.pop('rating_squads'),
+            }
+
+            player['achievements'] = achievements_batch.get(steam_id, [])
+            player['quests'] = get_player_quests(steam_id, supporter_level)
+            player['gift_codes'] = gift_codes_batch.get(steam_id, [])
+
+            player['progress'] = {
+                'level': bp_level,
+                'glory': player.pop('battlepass_glory'),
+                'current_exp': player.pop('battlepass_exp'),
+                'required_exp': get_bp_required_exp(bp_level),
+                'earned_exp': player.pop('battlepass_daily_exp'),
+                'fortune': player.pop('battlepass_fortune'),
+                'earned_fortune': player.pop('battlepass_daily_fortune')
+            }
+
+            resp_players.append(player)
+
+        resp = {
+            'players': resp_players,
+            'leaderboards': get_leaderboards(),
+            'achievements': get_achievements(),
+            'quests': get_quests(),
+            'patchnotes': get_patch_notes()
         }
-
-        resp_players.append(player)
-
-    resp = {
-        'players': resp_players,
-        'leaderboards': get_leaderboards(),
-        'achievements': get_achievements(),
-        'quests': get_quests(),
-        'patchnotes': get_patch_notes()
-    }
     return resp
 
 
