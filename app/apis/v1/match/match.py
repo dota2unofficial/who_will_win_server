@@ -106,27 +106,31 @@ async def before_match(data: BeforeMatchIn, auth=Depends(lua_auth)):
     return resp
 
 
-@db_session
 @router.post('/after_match_player')
 async def after_match_player(
-    data: AfterMatchPlayerBased, auth=Depends(lua_auth)
+    data: AfterMatchPlayerBased,
+    auth=Depends(lua_auth)
 ):
-    map_name = data.mapName
+    map_name = data.map_name
     if map_name not in CONST_PLAYERS_PER_TEAM:
         logger.info(f'Map name <{map_name}> does not belong to us!')
         raise HTTPException(
             status_code=403,
             detail=f'Map name <{map_name}> does not belong to us!'
         )
-    rating_field_name = f'Rating_{CONST_DB_MAP_NAMES[map_name]}'
+    rating_field_name = f'rating_{CONST_DB_MAP_NAMES[map_name]}'
 
     players_steam_ids = []
     for player in data.team.players:
-        if player.steamId != 0:
-            players_steam_ids.append(player.steamId)
+        if player.steam_id != 0:
+            players_steam_ids.append(player.steam_id)
     with db_session:
         team_changes = record_team_players_rating(
-            data, rating_field_name, players_steam_ids, map_name, data.isPvp
+            data,
+            rating_field_name,
+            players_steam_ids,
+            map_name,
+            data.isPvp
         )
     return {
         'players': {

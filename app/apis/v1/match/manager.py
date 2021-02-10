@@ -38,7 +38,7 @@ def record_best_time(
     team: AfterMatchTeam, team_players, map_name, is_pvp: bool
 ):
     db_map_name = CONST_DB_MAP_NAMES[map_name]
-    mode = f"BestPv{'P' if is_pvp else 'E'}"
+    mode = f"bestPv{'P' if is_pvp else 'E'}"
     # set new best rounds / times
     for player in team.players:
         db_player = team_players[player.steam_id]
@@ -84,7 +84,7 @@ def record_battle_pass_progress(
 
         daily_exp_limit = CONST_EXP_DAILY_LIMIT[db_player.supporter_state]
 
-        if added_exp + db_player.battlepass_daily_exp > daily_exp_limit:
+        if (added_exp + db_player.battlepass_daily_exp) > daily_exp_limit:
             added_exp = max(
                 daily_exp_limit - db_player.battlepass_daily_exp, 0
             )
@@ -159,7 +159,7 @@ def record_team_players_rating(
     players = process_incoming_players(players_steam_ids)
     match_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")
     round_number = team.round
-    # logger.info(f"Recording match id {data.matchId}")
+    logger.info(f"Recording match id: {data.match_id}")
 
     try:
         match = Match.get(match_id=data.match_id)
@@ -190,14 +190,14 @@ def record_team_players_rating(
     players_changes = {}
     match_players = {}
     for player in team.players:
-        # if player.steamId == "0":  # not counting bots in!
-        #    continue
+        if player.steam_id == "0":  # not counting bots in!
+            continue
         db_player = players[player.steam_id]
 
         db_player.match_count += 1
 
         other_avg_mmr = player.other_players_AvgMMR or team.other_teams_AvgMMR
-        players_changes[player.steamId] = {}
+        players_changes[player.steam_id] = {}
         old_rating = getattr(db_player, rating_field_name)
         # mmr is changed only in pvp
         new_rating = calculate_new_rating(
@@ -238,13 +238,22 @@ def record_team_players_rating(
                 new_rating
             )
         match_players[player.steam_id] = match_player
-    record_best_time(data.team, players, map_name, is_pvp)
+    record_best_time(
+        data.team,
+        players,
+        map_name,
+        is_pvp
+    )
     bp_changes = record_battle_pass_progress(
-        data.team, players, map_name, team.match_place, is_pvp
+        data.team,
+        players,
+        map_name,
+        team.match_place,
+        is_pvp
     )
     for steam_id, changes in bp_changes.items():
-        # if steam_id == "0":  # not counting bots in!
-        #    continue
+        if steam_id == "0":  # not counting bots in!
+            continue
         players_changes[steam_id]["battlepass"] = changes
         match_players[steam_id].battlepass_expreward = changes["exp"]["change"]
         match_players[steam_id].battlepass_gloryreward = (
