@@ -17,8 +17,7 @@ from ....libs.constants import (
 from ....libs.logging import logger
 from ....libs.functions import (
     get_bp_required_exp,
-    get_bp_levelup_reward,
-    get_bp_levelup_fortune_reward,
+    add_battle_pass_exp,
     keys_lower,
     steam_id_to_str
 )
