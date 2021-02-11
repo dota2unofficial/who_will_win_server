@@ -203,49 +203,58 @@ def set_match_player_round_data(
                 db_player.abilities = player.abilities
             if player.mastery:
                 db_player.mastery = player.mastery
-    return {
-        'response': 'success!'
-    }
+
+    return Response(status_code=200)
 
 
-@db_session
 @router.post('/events')
 async def poll_events(data: PollEventsIn, auth=Depends(lua_auth)):
-    response = []
-    events_query = MatchEvent.select(lambda me: me.match_id == data.match_id)
-    events = list(events_query)
-    if events:
-        logger.info(f'Got following events fetched: {events}')
-    for event in events:
-        logger.info(f'converting and deleting event: {event}')
-        response.append(event.to_dict()['Body'])
-    events_query.delete(bulk=True)
+    with db_session:
+        response = []
+        events_query = MatchEvent.select(
+            lambda me: me.match_id == data.match_id
+        )
+        events = list(events_query)
+        if events:
+            logger.info(f'Got following events fetched: {events}')
+        for event in events:
+            logger.info(f'converting and deleting event: {event}')
+            response.append(event.to_dict()['Body'])
+        events_query.delete(bulk=True)
     return response
 
 
-@db_session
 @router.post('/update_settings')
 async def update_players_settings(
-    data: UpdateSettingsIn, auth=Depends(lua_auth)
+    data: UpdateSettingsIn,
+    auth=Depends(lua_auth)
 ):
     steam_ids = [player.steam_id for player in data.players]
     players_settings_dict = {
         int(player.steam_id): player.settings for player in data.players
     }
-    players = process_incoming_players(steam_ids)
-    for player in players.values():
-        player.settings = players_settings_dict[player.steam_id]
+    with db_session:
+        players = process_incoming_players(steam_ids)
+        for player in players.values():
+            player.settings = players_settings_dict[player.steam_id]
     return Response(status_code=200)
 
 
-@db_session
 @router.post('/script_errors')
 async def script_error_report(data: ScriptErrorIn, auth=Depends(lua_auth)):
-    for stack, error_count in data.errors.items():
-        existing_error = ScriptError.get(stack=stack, match_id=data.match_id)
-        if not existing_error:
-            ScriptError(stack=stack, match_id=data.match_id, count=error_count)
-        else:
-            existing_error.count += error_count
+    with db_session:
+        for stack, error_count in data.errors.items():
+            existing_error = ScriptError.get(
+                stack=stack,
+                match_id=data.match_id
+            )
+            if not existing_error:
+                ScriptError(
+                    stack=stack,
+                    match_id=data.match_id,
+                    count=error_count
+                )
+            else:
+                existing_error.count += error_count
 
     return Response(status_code=200)
