@@ -35,7 +35,10 @@ def calculate_new_rating(old_rating, map_name, index, average_rating):
 
 
 def record_best_time(
-    team: AfterMatchTeam, team_players, map_name, is_pvp: bool
+    team: AfterMatchTeam,
+    team_players,
+    map_name,
+    is_pvp: bool
 ):
     db_map_name = CONST_DB_MAP_NAMES[map_name]
     mode = f"bestPv{'P' if is_pvp else 'E'}"
@@ -157,9 +160,9 @@ def record_team_players_rating(
 ):
     team = data.team
     players = process_incoming_players(players_steam_ids)
-    match_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")
+    match_time = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')
     round_number = team.round
-    logger.info(f"Recording match id: {data.match_id}")
+    logger.info(f'Recording match id: {data.match_id}')
 
     try:
         match = Match.get(match_id=data.match_id)
@@ -167,7 +170,7 @@ def record_team_players_rating(
         logger.info(f'Multiple records of match id <{data.match_id}> ' +
                     'were found. Removing all of them and starting over.')
         delete(m for m in Match if m.match_id == data.match_id)
-        logger.info("Successfully deleted old entries")
+        logger.info('Successfully deleted old entries')
         match = None
 
     if not match:
@@ -190,7 +193,7 @@ def record_team_players_rating(
     players_changes = {}
     match_players = {}
     for player in team.players:
-        if player.steam_id == "0":  # not counting bots in!
+        if player.steam_id == '0':  # not counting bots in!
             continue
         db_player = players[player.steam_id]
 
@@ -252,11 +255,11 @@ def record_team_players_rating(
         is_pvp
     )
     for steam_id, changes in bp_changes.items():
-        if steam_id == "0":  # not counting bots in!
+        if steam_id == '0':  # not counting bots in!
             continue
-        players_changes[steam_id]["battlepass"] = changes
-        match_players[steam_id].battlepass_expreward = changes["exp"]["change"]
+        players_changes[steam_id]['battlepass'] = changes
+        match_players[steam_id].battlepass_expreward = changes['exp']['change']
         match_players[steam_id].battlepass_gloryreward = (
-            changes["glory"]["change"]
+            changes['glory']['change']
         )
     return players_changes

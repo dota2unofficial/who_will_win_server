@@ -150,56 +150,62 @@ async def after_match_player(
     }
 
 
-@db_session
 @router.post('/set_match_player_round_data')
 def set_match_player_round_data(
     data: AfterMatchPlayerBasedUpdate,
     auth=Depends(lua_auth)
 ):
-
-    match_team = MatchTeam.get(
-        match_id=data.match_id,
-        team_id=data.team.team_id
-    )
-    if not match_team:
-        return Response(
-            status_code=404,
-            content=(f'MatchTeam with team_id<{data.team.team_id}> '
-                     f"and match_id<{data.match_id} doesn't exist>")
+    with db_session:
+        match_team = MatchTeam.get(
+            match_id=data.match_id,
+            team_id=data.team.team_id
         )
-    match_team.time = data.team.time
-    match_team.round = data.team.round
-    players_steam_ids = []
-    for player in data.team.players:
-        if player.steam_id != 0:
-            players_steam_ids.append(player.steam_id)
-    players = process_incoming_players(players_steam_ids)
-    record_best_time(data.team, players, data.map_name, True)
-
-    match_players = MatchPlayer.select(
-        lambda mp: mp.match_id == data.match_id and
-        mp.team_id == data.team.team_id
-    )
-    match_players = {str(mp.steam_id): mp for mp in match_players}
-
-    for player in data.team.players:
-        db_player = match_players.get(player.steam_id, None)
-        if not db_player:
-            continue
-        if player.innate:
-            db_player.innate = player.innate
-        if player.round_deaths:
-            db_player.round_deaths = [rd.dict() for rd in player.round_deaths]
-        else:
-            db_player.round_deaths = []
-        if player.items:
-            db_player.items = (
-                [str(item) for item in player.items if item is not None]
+        if not match_team:
+            return Response(
+                status_code=404,
+                content=(
+                    f'MatchTeam with team_id<{data.team.team_id}> '
+                    f'and match_id<{data.match_id} does not exist>'
+                )
             )
-        if player.abilities:
-            db_player.abilities = player.abilities
-        if player.mastery:
-            db_player.mastery = player.mastery
+        match_team.time = data.team.time
+        match_team.round = data.team.round
+        players_steam_ids = []
+        for player in data.team.players:
+            if player.steam_id != 0:
+                players_steam_ids.append(player.steam_id)
+        players = process_incoming_players(players_steam_ids)
+        record_best_time(data.team, players, data.map_name, True)
+
+        match_players = MatchPlayer.select(
+            lambda mp: mp.match_id == data.match_id and
+            mp.team_id == data.team.team_id
+        )
+        match_players = {str(mp.steam_id): mp for mp in match_players}
+
+        for player in data.team.players:
+            db_player = match_players.get(player.steam_id, None)
+            if not db_player:
+                continue
+            if player.innate:
+                db_player.innate = player.innate
+            if player.round_deaths:
+                db_player.round_deaths = [
+                    rd.dict() for rd in player.round_deaths
+                ]
+            else:
+                db_player.round_deaths = [] 
+            if player.items:
+                db_player.items = (
+                    [str(item) for item in player.items if item is not None]
+                )
+            if player.abilities:
+                db_player.abilities = player.abilities
+            if player.mastery:
+                db_player.mastery = player.mastery
+    return {
+        'response': 'success!'
+    }
 
 
 @db_session
