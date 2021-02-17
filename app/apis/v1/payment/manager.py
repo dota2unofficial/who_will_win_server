@@ -8,8 +8,8 @@ import stripe
 from fastapi import HTTPException, status, BackgroundTasks
 from pony.orm import db_session
 
+from ....core.settings import settings
 from ....libs.constants import (
-    CURRENCY_CONVERSION_RATE,
     CONST_SUPPORTER_FORTUNE_REWARD,
     CONST_SUPPORTER_EXP_REWARD,
     CONST_SUPPORTER_GLORY_REWARD
@@ -61,7 +61,9 @@ def get_payment_information(
     def get_price(yuan: int, usd: int):
         return {
             'usd': usd,
-            'cny': math.floor(yuan / CURRENCY_CONVERSION_RATE * 100)
+            'cny': math.floor(
+                yuan / float(settings.CURRENCY_CONVERSION_RATE) * 100
+            )
         }.get(currency, None)
 
     price_entry = PriceList.get(payment_kind=payment_kind)

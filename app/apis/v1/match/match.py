@@ -194,7 +194,7 @@ def set_match_player_round_data(
                     rd.dict() for rd in player.round_deaths
                 ]
             else:
-                db_player.round_deaths = [] 
+                db_player.round_deaths = []
             if player.items:
                 db_player.items = (
                     [str(item) for item in player.items if item is not None]

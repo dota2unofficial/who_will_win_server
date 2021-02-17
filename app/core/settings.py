@@ -1,4 +1,5 @@
-from typing import Final
+from typing import Any, Final
+from pydantic.types import PositiveFloat
 import stripe
 from pydantic import BaseSettings
 from pony.orm.core import BindingError
@@ -13,13 +14,13 @@ __Session: Final = ClientSession()
 
 
 class Settings(BaseSettings):
-    DB_PROVIDER: str
-    DB_NAME: str
-    DB_USER: str
-    DB_PASSWORD: str
-    DB_HOST: str
-    DB_PORT: str
-    STEAM_WEBAPI_KEY: str = '93A018F329C155FB240CB6D286748067'
+    DB_PROVIDER: str = 'postgres'
+    DB_NAME: str = 'www'
+    DB_USER: str = 'postgres'
+    DB_PASSWORD: str = 'postgres'
+    DB_HOST: str = 'localhost'
+    DB_PORT: str = '5432'
+
     STRIPE_SECRET: str = (
         'sk_test_51HL7fDGFJ5EJYxIJ7jXNoasDDExu2rs6hXiItU46IMu' +
         'CIyBf2KQ0coSZoQWAm2k3PJogolrE3OOIXkkVdZaV9pSs00CWxI3bvZ'
@@ -28,14 +29,19 @@ class Settings(BaseSettings):
         'pk_test_51HL7fDGFJ5EJYxIJZpvQllPVtm3cutz37DqQGXFGRbKG28' +
         'C7KcW9oAd3u0UO2vT4l3kGepDdzjGJ3Kpp7BwkVJG700EhVFEGZ6'
     )
-    PAYMENT_RETURN_URL: str = 'http://localhost:5000/'
     STRIPE_WEBHOOK_SECRET: str = 'whsec_FQkgYFcA5Z7HIwdEGhLRDgnl9gzRlSy9'
+
+    STEAM_WEBAPI_KEY: str = '93A018F329C155FB240CB6D286748067'
+
+    PAYMENT_RETURN_URL: str = 'http://localhost:5000/api/lua'
     ADMIN_USER: str = 'admin'
     ADMIN_PASS: str = 'admin'
     DEDICATED_USER: str = 'admin'
     DEDICATED_PASS: str = 'admin'
     PAYMENT_USER: str = 'admin'
     PAYMENT_PASS: str = 'admin'
+
+    CURRENCY_CONVERSION_RATE: str = '4.58599'
 
     def db_connect(self):
         print(
