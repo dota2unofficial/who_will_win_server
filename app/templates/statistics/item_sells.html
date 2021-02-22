@@ -1,0 +1,59 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <h3>Purchase stats for item "{{ item_name }}"</h3>
+    </div>
+    <div>
+        Total purchases times: {{ purchased_times }}<br>
+        Total purchased count: {{ purchased_total_count }}<br>
+    </div>
+    <div>
+        <h3>Purchase counts per day</h3>
+    </div>
+    <div>
+        <table border="1" style="border-collapse: collapse">
+            <tbody>
+            <tr style="font-weight: bold">
+                <td class="col-md-6" align="center">Date</td>
+                <td class="col-md-6" align="center">Sold Times</td>
+            </tr>
+            {% for item_selling in item_purchases_per_date  %}
+                <tr class="stats_row">
+                    <td class="col-md-6" align="center">{{ item_selling[0] }}</td>
+                    <td class="col-md-6" align="center">{{ item_selling[1] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div>
+        <h3>Recent purchases</h3>    
+    </div>
+    <div>
+        <table border="1" style="border-collapse: collapse">
+            <tbody>
+            <tr style="font-weight: bold">
+                <td class="col-md-4" align="center">Steam Id</td>
+                <td class="col-md-2" align="center">Item Count</td>
+                <td class="col-md-2" align="center">Item Cost</td>
+                <td class="col-md-4" align="center">Selling Date</td>
+            </tr>
+            {% for item_selling in item_purchases  %}
+                <tr class="stats_row">
+                    <td class="col-md-4" align="center">{{ item_selling.steam_id | player_profile_linkify }}</td>
+                    <td class="col-md-2" align="center">{{ item_selling.item_count }}</td>
+                    {% if item_selling.glory_cost %}
+                        <td class="col-md-2" align="center">{{ item_selling.glory_cost }} glory</td>
+                    {% else %}
+                        <td class="col-md-2" align="center">{{ item_selling.real_cost / 100 if item_selling.real_cost else 0 }} $</td>
+                    {% endif %}
+                    <td class="col-md-4" align="center">{{ item_selling.sold_at }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

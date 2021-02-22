@@ -44,7 +44,7 @@ async def add_dedicated_key(
     user=Depends(dedikeys_http_auth)
 ):
     with db_session:
-        DedicatedKeys(Key=dedicated_key)
+        DedicatedKeys(key=dedicated_key)
     return RedirectResponse(url='/admin/dedicated_keys')
 
 

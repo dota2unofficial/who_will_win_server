@@ -21,7 +21,6 @@ from ....libs.functions import (
     keys_lower,
     steam_id_to_str
 )
-from ....core.settings import settings
 from ....core.models.payments import PriceList, GiftCodes, ItemSellingHistory
 from ....core.models.players import Player
 from ....core.models.inventory import PlayerInventory

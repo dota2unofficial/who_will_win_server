@@ -1,40 +1,50 @@
 {% extends "statistics/statistics_base.html" %}
 
 {% block main %}
-    Total purchases count: {{ purchase_count }}
-    <h3>Purchased stats for GLORY items</h3>
-    <table border="1" style="border-collapse: collapse">
-        <tbody>
-        <tr style="font-weight: bold">
-            <td style="width: 200px" align="center">Item Name</td>
-            <td style="width: 100px" align="center">Sold Times</td>
-            <td style="width: 100px" align="center">Total Glory</td>
-        </tr>
-        {% for item_selling in glory_item_sells_top  %}
-            <tr class="stats_row">
-                <td style="width: 200px">{{ item_selling[0] | item_sell_linkify }}</td>
-                <td style="width: 100px" align="center">{{ item_selling[1] }}</td>
-                <td style="width: 100px" align="center">{{ item_selling[2] }}</td>
+    <div>
+        Total purchases count: {{ purchase_count }}
+    </div>
+    <div>
+        <h3>Purchased stats for GLORY items</h3>
+    </div>
+    <div>
+        <table border="1" style="border-collapse: collapse">
+            <tbody>
+            <tr style="font-weight: bold">
+                <td class="col-md-6" align="center">Item Name</td>
+                <td class="col-md-3" align="center">Sold Times</td>
+                <td class="col-md-3" align="center">Total Glory</td>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            {% for item_selling in glory_item_sells_top  %}
+                <tr class="stats_row">
+                    <td class="col-md-6">{{ item_selling[0] | item_sell_linkify }}</td>
+                    <td class="col-md-3" align="center">{{ item_selling[1] }}</td>
+                    <td class="col-md-3" align="center">{{ item_selling[2] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <hr>
-    <h3>Purchased stats for RMT items</h3>
-    <table border="1" style="border-collapse: collapse">
+    <div>
+        <h3>Purchased stats for RMT items</h3>
+    </div>
+    <div>
+        <table border="1" style="border-collapse: collapse">
         <tbody>
         <tr style="font-weight: bold">
-            <td style="width: 200px" align="center">Item Name</td>
-            <td style="width: 100px" align="center">Sold Times</td>
-            <td style="width: 100px" align="center">Total Cost</td>
+            <td class="col-md-6" align="center">Item Name</td>
+            <td class="col-md-3" align="center">Sold Times</td>
+            <td class="col-md-3" align="center">Total Cost</td>
         </tr>
         {% for item_selling in real_item_sells_top  %}
             <tr class="stats_row">
-                <td style="width: 200px">{{ item_selling[0] | item_sell_linkify }}</td>
-                <td style="width: 100px" align="center">{{ item_selling[1] }}</td>
-                <td style="width: 100px" align="center">{{ item_selling[2] / 100 }}$</td>
+                <td class="col-md-6">{{ item_selling[0] | item_sell_linkify }}</td>
+                <td class="col-md-3" align="center">{{ item_selling[1] }}</td>
+                <td class="col-md-3" align="center">{{ item_selling[2] / 100 }}$</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    </div>
 {% endblock %}

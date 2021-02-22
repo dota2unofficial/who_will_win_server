@@ -1,45 +1,60 @@
 {% extends "statistics/statistics_base.html" %}
 
 {% block main %}
-    <a href="#item-usage">Scroll to item usage</a>
+    <div>
+        <a href="#item-usage">Scroll to item usage</a>
+    </div>
     <hr>
-    <p>Accounted Matches: {{ match_count }}</p>
-    <h3 id="item-avg">Item average round</h3>
-
-    <table>
-        <tbody>
-        <tr style="font-weight: bold">
-            <td style="width: 100px" align="center">Avg Round</td>
-            <td style="width: 300px" align="center">Name</td>
-            <td style="width: 100px" align="center">Used Count</td>
-        </tr>
-        {% for avg, count, name in item_average_round %}
-            <tr class="stats_row">
-                <td style="width: 100px" align="center">{{ "%.2f"|format(avg|float) }}</td>
-                <td style="width: 300px">{{ name | item_stats_linkify }}</td>
-                <td style="width: 100px" align="center">{{ count }}</td>
+    <div>
+        <p>Accounted Matches: {{ match_count }}</p>
+    </div>
+    <div>
+        <h3 id="item-avg">Item average round</h3>
+    </div>
+    <div>
+        <table>
+            <tbody>
+            <tr style="font-weight: bold">
+                <td class="col-md-3" align="center">Avg Round</td>
+                <td class="col-md-6" align="center">Name</td>
+                <td class="col-md-3" align="center">Used Count</td>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <a href="#item-avg">Scroll to item average round</a>
-    <h3 id="item-usage">Item usage</h3>
-    <table>
-        <tbody>
-        <tr style="font-weight: bold">
-            <td style="width: 100px" align="center">Used Count</td>
-            <td style="width: 300px" align="center">Name</td>
-            <td style="width: 100px" align="center">Avg Round</td>
-        </tr>
-        {% for avg, count, name in item_usage %}
-            <tr class="stats_row">
-                <td style="width: 100px" align="center">{{ count }}</td>
-                <td style="width: 300px">{{ name | item_stats_linkify }}</td>
-                <td style="width: 100px" align="center">{{ "%.2f"|format(avg|float) }}</td>
+            {% for avg, count, name in item_average_round %}
+                <tr class="stats_row">
+                    <td class="col-md-3" align="center">{{ "%.2f"|format(avg|float) }}</td>
+                    <td class="col-md-6">{{ name | item_stats_linkify }}</td>
+                    <td class="col-md-3" align="center">{{ count }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <a href="#item-avg">Scroll to item average round</a>
+    </div>
+    <div>
+        <h3 id="item-usage">Item usage</h3>
+    </div>
+    <div>
+        <table>
+            <tbody>
+            <tr style="font-weight: bold">
+                <td class="col-md-3" align="center">Used Count</td>
+                <td class="col-md-6" align="center">Name</td>
+                <td class="col-md-3" align="center">Avg Round</td>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <a href="#item-avg">Scroll to item average round</a>
+            {% for avg, count, name in item_usage %}
+                <tr class="stats_row">
+                    <td class="col-md-3" align="center">{{ count }}</td>
+                    <td class="col-md-6">{{ name | item_stats_linkify }}</td>
+                    <td class="col-md-3" align="center">{{ "%.2f"|format(avg|float) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <a href="#item-avg">Scroll to item average round</a>
+    </div>
     <hr>
 {% endblock %}

@@ -1,93 +1,122 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Achievements:</h1>
-
-<table>
-    <tbody>
-    <tr style="font-weight: bold">
-        <td style="width: 200px">Name</td>
-        <td style="width: 300px">Type</td>
-        <td style="width: 400px">Description</td>
-        <td style="width: 400px">Reward</td>
-    </tr>
-    {% for achievement in achievements %}
-        <tr contenteditable class="achievement_row" id="{{ achievement["id"] }}">
-            <td style="width: 200px">{{ achievement["name"] }}</td>
-            <td style="width: 300px">{{ achievement["type"] }}</td>
-            <td style="width: 400px">{{ achievement["description"] | tojson }}</td>
-            <td style="width: 400px">{{ achievement["reward"] | tojson }}</td>
-            <td contenteditable="false">
-                <form method="get" style="margin: auto" action="/admin/remove_achievement">
-                    <input name="achievement_id" type="hidden" value="{{ achievement.id }}"/>
-                    <input type="submit" value="Remove"/>
-                </form>
-            </td>
+<div>
+    <h1>Achievements:</h1>
+</div>
+<div>
+    <table>
+        <tbody>
+        <tr style="font-weight: bold">
+            <td class="col-md-2">Name</td>
+            <td class="col-md-3">Type</td>
+            <td class="col-md-4">Description</td>
+            <td class="col-md-3">Reward</td>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-<h2>Save changes:</h2>
-<button onclick="content_changed()">Save changes</button>
-
-<h2>Add achievement</h2>
-<form action="/admin/add_achievement">
-    <input type="text" name="achievement_name" required placeholder="Name [string]" style="width: 190px">
-    <input type="text" name="achievement_type" required placeholder="Type [string]"
-           style="width: 290px">
-    <input type="text" name="achievement_description" placeholder="Description [JSON]" style="width: 390px">
-    <input type="text" name="achievement_reward" required placeholder="Reward [JSON]" style="width: 390px">
-    <input type="submit">
-</form>
-<hr>
-Possible rewards:<br>
-<pre><code class="language-json">
-{
-    "glory": 1,
-    "fortune": 1,
-    "exp": 1,
-    "item": {
-        "name": "aura_4",
-        "count": 2, [Optional]
-        "gem": "unimagined_treasury" [Optional]
-    }
-}
-</code></pre>
-<hr>
-<h3>Tiered achievement declaration</h3>
-Description field:<br>
-<pre><code class="language-json">
-{
-    "t1": 777,
-    "t2": 7777,
-    "t3": 77777,
-    "t4": 777777,
-    ...
-    "tN": M,
-}
-</code></pre><br>
-Rewards field:<br>
-<pre><code class="language-json">
-{
-    "t1": {
-        "glory": 400
-    },
-    "t2": {
-        "glory": 900,
-        "fortune": 10,
-    },
-    "t3": {
-        "glory": 2000,
-        "fortune": 20,
-        "item": {
-            "name": "aura_4",
-            "count": 2, [Optional]
-            "gem": "unimagined_treasury" [Optional]
+        {% for achievement in achievements %}
+            <tr contenteditable class="achievement_row" id="{{ achievement['id'] }}">
+                <td class="col-md-2">{{ achievement["name"] }}</td>
+                <td class="col-md-3">{{ achievement["type"] }}</td>
+                <td class="col-md-4">{{ achievement["description"] | tojson }}</td>
+                <td class="col-md-3">{{ achievement["reward"] | tojson }}</td>
+                <td contenteditable="false">
+                    <form method="get" style="margin: auto" action="/admin/remove_achievement">
+                        <input name="achievement_id" type="hidden" value="{{ achievement.id }}"/>
+                        <button class="btn btn-outline-primary" onclick="content_changed(event)">Save changes</button>
+                        <input class="btn btn-secondary" type="submit" value="Remove"/>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <h2>Add achievement</h2>
+</div>
+<div>
+    <form action="/admin/add_achievement">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="achievement_name" required placeholder="Name [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="achievement_type" required placeholder="Type [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="achievement_description" placeholder="Description [JSON]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="achievement_reward" required placeholder="Reward [JSON]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <hr>
+    Possible rewards:<br>
+</div>
+<div>
+    <pre><code class="language-json">
+        {
+            "glory": 1,
+            "fortune": 1,
+            "exp": 1,
+            "item": {
+                "name": "aura_4",
+                "count": 2, [Optional]
+                "gem": "unimagined_treasury" [Optional]
+            }
         }
-    }
-}
-</code></pre>
+    </code></pre>
+</div>
+<div>
+    <h3>Tiered achievement declaration</h3>
+    Description field:<br>
+</div>
+<hr>
+<div>
+    <pre><code class="language-json">
+        {
+            "t1": 777,
+            "t2": 7777,
+            "t3": 77777,
+            "t4": 777777,
+            ...
+            "tN": M,
+        }
+    </code></pre><br>
+</div>
+<div>
+    Rewards field:<br>
+</div>
+<div>
+    <pre><code class="language-json">
+        {
+            "t1": {
+                "glory": 400
+            },
+            "t2": {
+                "glory": 900,
+                "fortune": 10,
+            },
+            "t3": {
+                "glory": 2000,
+                "fortune": 20,
+                "item": {
+                    "name": "aura_4",
+                    "count": 2, [Optional]
+                    "gem": "unimagined_treasury" [Optional]
+                }
+            }
+        }
+    </code></pre>
+</div>
 {% endblock %}
 
 {% block script %}
@@ -95,7 +124,8 @@ Rewards field:<br>
 
 <script>
     hljs.initHighlightingOnLoad();
-    function content_changed() {
+    function content_changed(event) {
+        event.preventDefault()
         console.log("Content changed! ")
         // gather all fields and send them to server
         const rows = Array.from(document.getElementsByClassName("achievement_row"))

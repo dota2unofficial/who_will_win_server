@@ -45,9 +45,9 @@ async def add_achievement(
 ):
     with db_session:
         new_achievement = Achievements(
-            Name=achievement_name,
-            Type=achievement_type,
-            Reward=loads(achievement_reward)
+            name=achievement_name,
+            type=achievement_type,
+            reward=loads(achievement_reward)
         )
         if achievement_description:
             new_achievement.description = loads(achievement_description)

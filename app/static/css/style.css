@@ -83,6 +83,7 @@ div.container-wrapper {
     display: flex;
     flex-direction: column;
     padding: 0 15px;
+    margin-bottom: 40px;
 }
 
 div.container-wrapper > .row.content {
@@ -307,3 +308,19 @@ div.container-wrapper > .row.content {
     width: auto;
 }
 
+form {
+  color: #333;
+}
+
+table td form {
+  display: flex;
+}
+
+table td form button {
+  margin-right: 10px;
+}
+
+table td form .btn {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block script %}
+<script>
+    function content_changed(event) {
+        event.preventDefault();
+        console.log("Content changed!")
+        // gather all fields and send them to server
+        const rows = Array.from(document.getElementsByClassName("key_row"))
+        console.log(rows)
+        console.log(typeof rows)
+        let data = {}
+        rows.forEach(row => {
+            const children = row.children
+            data[row.id] = {
+                "key": children[0].textContent,
+            }
+        })
+        data = JSON.stringify(data)
+        console.log(data, " | ", typeof data)
+        try {
+            fetch(location.href, {method: "POST", body: data, headers: {"content-type": "application/json"}})
+                .then((data) => {
+                    console.log(data);
+                    event.target.blur();
+                });
+        } catch (error) {
+            console.log("ERROR: ", error);
+            event.target.blur();
+        }
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Dedicated Keys List: </h1>
+</div>
+<div>
+    <table>
+        <tbody>
+        <tr style="font-weight: bold">
+            <td style="width: 200px">Dedicated Key</td>
+        </tr>
+        {% for key in keys %}
+            <tr contenteditable class="key_row" id="{{ key['id'] }}">
+                <td style="width: 500px">{{ key["key"] }}</td>
+                <td contenteditable="false">
+                    <form method="get" style="margin: auto" action="/admin/remove_dedicated_key">
+                        <input name="dedicated_key_id" type="hidden" value="{{ key.id }}"/>
+                        <button class="btn btn-outline-primary" onclick="content_changed(event)">Save changes</button>
+                        <input class="btn btn-secondary" type="submit" value="Remove"/>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <h2>Add Price</h2>
+</div>
+<div>
+    <form action="/admin/add_dedicated_key">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input class="form-control" type="text" name="dedicated_key" required placeholder="Dedicated Key [string]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+{% endblock %}

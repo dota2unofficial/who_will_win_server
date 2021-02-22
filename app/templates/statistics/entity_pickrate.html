@@ -1,11 +1,11 @@
-{% extends "statistics/statistics_base.html" %}
+{% extends 'base.html' %}
 
 {% block head %}
     {{ super() }}
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 {% endblock %}
 
-{% block main %}
+{% block content %}
     <canvas id="myChart"></canvas>
 {% endblock %}
 
@@ -14,41 +14,73 @@
         var ctx = document.getElementById('myChart').getContext('2d');
         var chart = new Chart(ctx, {
             // The type of chart we want to create
-            type: 'line',
-
+            type: 'bar',
             // The data for our dataset
             data: {
                 labels: ["{{ dates_repr | join('\", \"') |safe }}"],
                 datasets: [{
+                    type: 'bar',
                     fill: false,
-                    label: 'Match Count',
-                    backgroundColor: 'rgb(194, 98, 48)',
-                    borderColor: 'rgba(194, 98, 48, 0.5)',
-                    data: {{ match_counts_repr}}
+                    label: '{{ entity_name }} Pick Count',
+                    backgroundColor: 'rgba(194, 98, 48, 0.4)',
+                    borderColor: 'rgb(241,84,6)',
+                    borderWidth: 1,
+                    data: {{ pick_rates_repr }},
+                    yAxisID: 'y-axis-1'
+                }, {
+                    type: 'line',
+                    label: '{{ entity_name }} Average Round',
+                    fill: false,
+                    backgroundColor: 'rgb(19,196,74)',
+                    borderColor: 'rgba(19,196,74, 0.5)',
+                    data: {{ avg_rounds }},
+                    yAxisID: 'y-axis-2'
                 }]
             },
 
             options: {
+                tooltips: {
+                    mode: 'label'
+                },
                 responsive: true,
                 title: {
                     display: true,
                     fontColor: '#e8bf6a',
-                    text: 'Match Count Stats'
+                    text: '{{ entity_name }} Pick Count'
                 },
                 scales: {
                     yAxes: [{
+                        id: "y-axis-1",
+                        display: true,
+                        position: "left",
                         gridLines: {
                             color: "white"
                         },
                         scaleLabel: {
 							display: true,
                             fontColor: '#e8bf6a',
-							labelString: 'Match Count'
+							labelString: 'Picked times'
 						},
                         ticks: {
                             fontColor: '#e8bf6a'
                         },
 
+                    },
+                    {
+                        id: "y-axis-2",
+                        display: true,
+                        position: "right",
+                        gridLines: {
+                            display: false
+                        },
+                        scaleLabel: {
+							display: true,
+                            fontColor: '#e8bf6a',
+							labelString: 'Average Round'
+						},
+                        ticks: {
+                            fontColor: '#e8bf6a'
+                        },
                     }],
                     xAxes: [{
                         gridLines: {

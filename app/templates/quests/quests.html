@@ -2,7 +2,8 @@
 
 {% block script %}
 <script>
-    function content_changed() {
+    function content_changed(event) {
+        event.preventDefault();
         console.log("Content changed! ")
         // gather all fields and send them to server
         const rows = Array.from(document.getElementsByClassName("quest_row"))
@@ -24,65 +25,89 @@
             fetch(location.href, {method: "POST", body: data, headers: {"content-type": "application/json"}})
                 .then((data) => {
                     console.log(data);
+                    event.target.blur();
                 });
         } catch (error) {
             console.log("ERROR: ", error)
+            event.target.blur();
         }
     }
 </script>
 {% endblock %}
 
 {% block content %}
-<h1>Quests:</h1>
-
-<table border="1" style="border-collapse: collapse">
-    <tbody>
-    <tr style="font-weight: bold">
-        <td style="width: 200px">Name</td>
-        <td style="width: 300px">Type</td>
-        <td style="width: 400px">Description</td>
-        <td style="width: 400px">Reward</td>
-    </tr>
-    {% for quest in quests %}
-        <tr contenteditable class="quest_row" id="{{ quest["id"] }}">
-            <td style="width: 200px">{{ quest["name"] }}</td>
-            <td style="width: 300px">{{ quest["type"] }}</td>
-            <td style="width: 400px">{{ quest["description"] | tojson }}</td>
-            <td style="width: 400px">{{ quest["reward"] | tojson }}</td>
-            <td contenteditable="false">
-                <form method="get" style="margin: auto" action="/admin/remove_quest">
-                    <input name="quest_id" type="hidden" value="{{ quest.id }}"/>
-                    <input type="submit" value="Remove"/>
-                </form>
-            </td>
+<div>
+    <h1>Quests:</h1>
+</div>
+<div>
+    <table style="border-collapse: collapse">
+        <tbody>
+        <tr style="font-weight: bold">
+            <td class="col-md-2">Name</td>
+            <td class="col-md-3">Type</td>
+            <td class="col-md-4">Description</td>
+            <td class="col-md-3">Reward</td>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-<h2>Save changes:</h2>
-<button onclick="content_changed()">Save changes</button>
-
-<h2>Add Quest</h2>
-<form action="/admin/add_quest">
-    <input type="text" name="quest_name" required placeholder="Name [string]" style="width: 190px">
-    <input type="text" name="quest_type" required placeholder="Type [string]" style="width: 290px">
-    <input type="text" name="quest_description" placeholder="Description [JSON]" style="width: 390px">
-    <input type="text" name="quest_reward" required placeholder="Reward [JSON]" style="width: 390px">
-    <input type="submit">
-</form>
-<hr>
-Possible rewards:<br>
-<pre><code class="language-json">
-{
-    "glory": 1,
-    "fortune": 1,
-    "exp": 1,
-    "item": {
-        "name": "aura_4",
-        "count": 2, [Optional]
-        "gem": "unimagined_treasury" [Optional]
-    }
-}
-</code></pre>
+        {% for quest in quests %}
+            <tr contenteditable class="quest_row" id="{{ quest['id'] }}">
+                <td class="col-md-2">{{ quest["name"] }}</td>
+                <td class="col-md-3">{{ quest["type"] }}</td>
+                <td class="col-md-4">{{ quest["description"] | tojson }}</td>
+                <td class="col-md-3">{{ quest["reward"] | tojson }}</td>
+                <td contenteditable="false">
+                    <form method="get" style="margin: auto" action="/admin/remove_quest">
+                        <input name="quest_id" type="hidden" value="{{ quest.id }}"/>
+                        <button class="btn btn-outline-primary" onclick="content_changed(event)">Save changes</button>
+                        <input class="btn btn-secondary" type="submit" value="Remove"/>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <h2>Add Quest</h2>
+</div>
+<div>
+    <form action="/admin/add_quest">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="quest_name" required placeholder="Name [string]">            
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="quest_type" required placeholder="Type [string]">            
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="quest_description" placeholder="Description [JSON]">            
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="quest_reward" required placeholder="Reward [JSON]">            
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+    <hr>
+</div>
+<div>
+    Possible rewards:<br>
+</div>
+<div>
+    <pre><code class="language-json hljs">
+        {
+            "glory": 1,
+            "fortune": 1,
+            "exp": 1,
+            "item": {
+                "name": "aura_4",
+                "count": 2, [Optional]
+                "gem": "unimagined_treasury" [Optional]
+            }
+        }
+    </code></pre>
+</div>
 {% endblock %}

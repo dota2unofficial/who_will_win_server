@@ -14,7 +14,7 @@ from ....core.models.quests import Quests, PlayerQuests
 router = APIRouter()
 
 
-@router.get('/admin/quests', response_class=HTMLResponse)
+@router.get('/quests', response_class=HTMLResponse)
 async def get_quests_page(request: Request, user=Depends(http_auth)):
     quests = get_quests(create_session=True)
     return templates.TemplateResponse(
@@ -55,7 +55,7 @@ async def add_quest(
     return RedirectResponse(url='/admin/quests')
 
 
-@router.get('/admin/remove_quest')
+@router.get('/remove_quest')
 async def remove_quest(quest_id: int, user=Depends(http_auth)):
     with db_session:
         Quests[quest_id].delete()

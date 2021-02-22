@@ -159,7 +159,7 @@ async def set_daily_exp(
     user=Depends(http_auth)
 ):
     with db_session:
-        if player := Player.get(steamId=steam_id):
+        if player := Player.get(steam_id=steam_id):
             player.battlepass_daily_exp = daily_exp_amount
     return RedirectResponse('/admin/player_management')
 
@@ -216,7 +216,7 @@ async def set_daily_fortune(
         with db_session:
             db.execute("""
                update "Player"
-               set 'battlepass_daily_fortune' = $daily_fortune_amount
+               set "battlepass_daily_fortune" = $daily_fortune_amount
             """.strip())
         return RedirectResponse('/admin/player_management')
 

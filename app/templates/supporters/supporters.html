@@ -21,60 +21,91 @@
 {% endblock %}
 
 {% block content %}
-<h1>Supporters list:</h1>
-<h2>Add/Update supporter</h2>
-<form method="post" target="dummyframe" onsubmit="setTimeout(()=>location.reload(), 300);return true">
-    <input type="text" name="steam_id" required placeholder="Steam ID [string]" style="width: 190px">
-    <input type="text" name="level" required placeholder="New Level [string]" style="width: 290px">
-    <input type="text" name="comment" placeholder="Comment [string]" style="width: 390px">
-    <input type="submit">
-</form>
-<h2>Manually managed supporters:</h2>
-<h2>SUPPORTER INSTANT REWARDS ARE ADDED ON EACH updateSupporter INVOCATION FOR A PLAYER</h2>
-<table>
-    <tbody>
-    <tr style="font-weight: bold">
-        <td style="width: 150px">Steam Id</td>
-        <td style="width: 50px">Level</td>
-        <td style="width: 600px">Comment</td>
-    </tr>
-    {% for supporter in manual %}
-        <tr class="supporter_row" id="{{ supporter["id"] }}">
-            <td style="width: 150px">{{ supporter["steam_id"]|player_profile_linkify }}</td>
-            <td style="width: 50px">{{ supporter["supporter_state"] }}</td>
-            <td style="width: 600px">{{ supporter["supporter_comment"] | urlize }}</td>
-            <td>
-                <form method="get" style="margin: auto" action="/admin/remove_supporter">
-                    <input name="supporter_id" type="hidden" value="{{ supporter.id }}"/>
-                    <input type="submit" value="Remove"/>
-                </form>
-            </td>
-            <td style="padding: 0 0 0 40px">
-                <form method="get" style="margin: auto" action="/admin/add_supporter_reward">
-                    <input name="supporter_id" type="hidden" value="{{ supporter.id }}"/>
-                    <input type="submit" value="Monthly Reward"/>
-                </form>
-            </td>
+<div>
+    <h1>Supporters list:</h1>
+</div>
+<div>
+    <h3>Manually managed supporters:</h3>
+</div>
+<div>
+    SUPPORTER INSTANT REWARDS ARE ADDED ON EACH updateSupporter INVOCATION FOR A PLAYER
+</div>
+<div>
+    <table>
+        <tbody>
+        <tr style="font-weight: bold">
+            <td class="col-md-4">Steam Id</td>
+            <td class="col-md-2">Level</td>
+            <td class="col-md-6">Comment</td>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
-<h2>Automatically managed supporters:</h2>
-<table>
-    <tbody>
-    <tr style="font-weight: bold">
-        <td style="width: 150px">Steam Id</td>
-        <td style="width: 50px">Level</td>
-        <td style="width: 200px">Ends at</td>
-    </tr>
-    {% for supporter in automatic %}
-        <tr class="supporter_row" id="{{ supporter["id"] }}">
-            <td style="width: 150px">{{ supporter["steam_id"] | player_profile_linkify }}</td>
-            <td style="width: 50px">{{ supporter["supporter_state"] }}</td>
-            <td style="width: 200px">{{ supporter["supporter_enddate"] }}</td>
+        {% for supporter in manual %}
+            <tr class="supporter_row" id="{{ supporter['id'] }}">
+                <td class="col-md-4">{{ supporter["steam_id"]|player_profile_linkify }}</td>
+                <td class="col-md-2">{{ supporter["supporter_state"] }}</td>
+                <td class="col-md-6">{{ supporter["supporter_comment"] | urlize }}</td>
+                <td>
+                    <form method="get" style="margin: auto" action="/admin/add_supporter_reward">
+                        <input name="supporter_id" type="hidden" value="{{ supporter.id }}"/>
+                        <input class="btn btn-outline-primary" type="submit" value="Monthly Reward"/>
+                    </form>
+                </td>
+                <td style="padding: 0 0 0 5px">
+                    <form method="get" style="margin: auto" action="/admin/remove_supporter">
+                        <input name="supporter_id" type="hidden" value="{{ supporter.id }}"/>
+                        <input class="btn btn-outline-primary" type="submit" value="Remove"/>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <h3>Automatically managed supporters:</h3>
+</div>
+<div>
+    <table>
+        <tbody>
+        <tr style="font-weight: bold">
+            <td class="col-md-4">Steam Id</td>
+            <td class="col-md-2">Level</td>
+            <td class="col-md-6">Ends at</td>
+            
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
-<iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+        {% for supporter in automatic %}
+            <tr class="supporter_row" id="{{ supporter['id'] }}">
+                <td class="col-md-4">{{ supporter["steam_id"] | player_profile_linkify }}</td>
+                <td class="col-md-2">{{ supporter["supporter_state"] }}</td>
+                <td class="col-md-6">{{ supporter["supporter_enddate"] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <h1>Add/Update supporter</h1>
+</div>
+<div>
+    <form method="post" target="dummyframe" onsubmit="setTimeout(()=>location.reload(), 300);return true">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam ID [string]">
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="level" required placeholder="New Level [string]">
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="comment" placeholder="Comment [string]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+</div>
 {% endblock %}

@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.get('/payments/checkout', response_class=HTMLResponse)
 async def get_payment_page(request: Request, id: Optional[str]):
-    logger.info('SESSION ID: ', id)
+    logger.info(f'SESSION ID: {id}')
     publishable_key = settings.STRIPE_PUBLISHABLE
     return templates.TemplateResponse(
         'payments/checkout.html',

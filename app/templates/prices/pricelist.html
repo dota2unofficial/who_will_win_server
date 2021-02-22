@@ -2,7 +2,8 @@
 
 {% block script %}
 <script>
-    function content_changed() {
+    function content_changed(event) {
+        event.preventDefault();
         console.log("Content changed! ")
         // gather all fields and send them to server
         const rows = Array.from(document.getElementsByClassName("price_row"))
@@ -24,49 +25,71 @@
             fetch(location.href, {method: "POST", body: data, headers: {"content-type": "application/json"}})
                 .then((data) => {
                     console.log(data);
+                    event.target.blur();
                 });
         } catch (error) {
-            console.log("ERROR: ", error)
+            console.log("ERROR: ", error);
+            event.target.blur();
         }
     }
 </script>
 {% endblock %}
 
 {% block content %}
-<h1>Prices List: </h1>
-<table>
-    <tbody>
-    <tr style="font-weight: bold">
-        <td style="width: 400px">Payment Kind</td>
-        <td style="width: 200px">Price USD</td>
-        <td style="width: 200px">Price CNY</td>
-        <td style="width: 400px">Purchased Item</td>
-    </tr>
-    {% for price in price_list %}
-        <tr contenteditable class="price_row" id="{{ price["id"] }}">
-            <td style="width: 400px">{{ price["payment_kind"] }}</td>
-            <td style="width: 200px">{{ price["price_usd"] }}</td>
-            <td style="width: 200px">{{ price["price_cny"] }}</td>
-            <td style="width: 400px">{{ price["item_name"] }}</td>
-            <td contenteditable="false">
-                <form method="get" style="margin: auto" action="/admin/remove_price">
-                    <input name="price_id" type="hidden" value="{{ price.id }}"/>
-                    <input type="submit" value="Remove"/>
-                </form>
-            </td>
+<div>
+    <h1>Prices List: </h1>
+</div>
+<div>
+    <table>
+        <tbody>
+        <tr style="font-weight: bold">
+            <td class="col-md-2">Payment Kind</td>
+            <td class="col-md-3">Price USD</td>
+            <td class="col-md-4">Price CNY</td>
+            <td class="col-md-3">Purchased Item</td>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
-<h2>Save changes:</h2>
-<button onclick="content_changed()">Save changes</button>
-
-<h2>Add Price</h2>
-<form action="/admin/add_price">
-    <input type="text" name="payment_name" required placeholder="Payment Kind [string]" style="width: 190px">
-    <input type="text" name="price_usd" required placeholder="Price USD [int]" style="width: 290px">
-    <input type="text" name="price_cny" placeholder="Price CNY [int]" style="width: 390px">
-    <input type="text" name="item_name" required placeholder="Purchased Item Name [str]" style="width: 400px">
-    <input type="submit">
-</form>
+        {% for price in price_list %}
+            <tr contenteditable class="price_row" id="{{ price['id'] }}">
+                <td class="col-md-2">{{ price["payment_kind"] }}</td>
+                <td class="col-md-3">{{ price["price_usd"] }}</td>
+                <td class="col-md-4">{{ price["price_cny"] }}</td>
+                <td class="col-md-3">{{ price["item_name"] }}</td>
+                <td contenteditable="false">
+                    <form method="get" style="margin: auto" action="/admin/remove_price">
+                        <input name="price_id" type="hidden" value="{{ price['id'] }}"/>
+                        <button class="btn btn-outline-primary" onclick="content_changed(event)">Save changes</button>
+                        <input class="btn btn-secondary" type="submit" value="Remove" />
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div>
+    <h2>Add Price</h2>
+</div>
+<div>
+    <form action="/admin/add_price">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="payment_name" required placeholder="Payment Kind [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="price_usd" required placeholder="Price USD [int]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="price_cny" placeholder="Price CNY [int]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="item_name" required placeholder="Purchased Item Name [str]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
 {% endblock %}

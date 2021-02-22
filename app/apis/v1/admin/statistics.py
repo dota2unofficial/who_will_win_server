@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, date
 
 from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
-from pony.orm import db_session, select, avg, desc
+from pony.orm import db_session, select, avg, desc, count
 
 from ....libs.constants import CONST_RATING_CHANGES, CONST_STAT_TYPES
 from ....libs.logging import logger
@@ -17,7 +17,9 @@ from ....libs.queries import (
     quests_progress,
     achievements_progress,
     dated_leaderboard,
-    masteries_average_round
+    masteries_average_round,
+    ability_per_day_pickrate,
+    item_per_day_pickrate
 )
 from .templates import templates
 from ....core.models.db import db
@@ -447,6 +449,87 @@ async def get_statistics_by_map_page(request: Request, map_name: str):
             'map_names': map_names,
             'selected_map': map_name,
             'from_date': str(from_date),
+            **data
+        }
+    )
+
+
+@router.get('/ability/{ability_name}')
+async def get_ability_stats(request: Request, ability_name: str):
+    with db_session:
+        res = db.select(ability_per_day_pickrate)
+        data = {
+            'avg_rounds': [float(val[2]) for val in res],
+            'pick_rates_repr': [val[1] for val in res],
+            'dates_repr': [val[0].strftime('%d.%m.%Y') for val in res],
+        }
+    return templates.TemplateResponse(
+        'statistics/entity_pickrate.html',
+        {
+            '': f'{ability_name}',
+            'request': request,
+            **data
+        }
+    )
+
+
+@router.get('/item/{item_name}')
+async def get_item_stats(request: Request, item_name: str):
+    with db_session:
+        res = db.select(item_per_day_pickrate)
+        data = {
+            'avg_rounds': [float(val[2]) for val in res],
+            'pick_rates_repr': [val[1] for val in res],
+            'dates_repr': [val[0].strftime('%d.%m.%Y') for val in res],
+        }
+    return templates.TemplateResponse(
+        'statistics/entity_pickrate.html',
+        {
+            'title': f'{item_name}',
+            'request': request,
+            **data
+        }
+    )
+
+
+@router.get('/sells/{item_name}')
+async def get_item_sells(request: Request, item_name: str):
+    with db_session:
+        data = {
+            'purchased_times':
+                ItemSellingHistory.select(
+                    lambda item: item.item_name == item_name
+                ).count(),
+            'purchased_total_count':
+                list(
+                    select(
+                        sum(item.item_count) for item in (
+                            ItemSellingHistory
+                        ) if item.item_name == item_name
+                    )
+                )[0],
+            'item_purchases':
+                list(
+                    select(item for item in (
+                        ItemSellingHistory
+                    ) if item.item_name == item_name).order_by(
+                        desc(ItemSellingHistory.sold_at)).limit(100)
+                    ),
+            'item_purchases_per_date':
+                list(
+                    select(
+                        (item.sold_at, count(item.id)) for item in (
+                            ItemSellingHistory
+                        ) if item.item_name == item_name
+                    )
+                ),
+        }
+    return templates.TemplateResponse(
+        'statistics/item_sells.html',
+        {
+            'title': f'{item_name} Sells in Custom Hero Clash',
+            'request': request,
+            'item_name': item_name,
             **data
         }
     )

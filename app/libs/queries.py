@@ -185,14 +185,38 @@ masteries_average_round = """
     ORDER BY Average desc
 """.lstrip()
 
-sample_functions = """
-    CREATE OR REPLACE FUNCTION sample_func() RETURNS BOOLEAN
-    AS $_$
-    BEGIN
-        RETURN TRUE;
-    END;
-    $_$ LANGUAGE PLPGSQL;
-"""
+ability_per_day_pickrate = """
+    select
+        "ended_at"::date,
+        count("abilities"),
+        avg(mt."round")
+    from
+        "MatchPlayer" mp
+    inner join
+        "MatchTeam" AS mt ON mt."match_id" = mp."match_id" and
+        mt."team_id" = mp."team_id"
+    inner join
+        "Match" M on mp."match_id" = M."match_id"
+    where
+        $ability_name = any("abilities")
+    group by "ended_at"::date;
+""".lstrip()
+
+item_per_day_pickrate = """
+    select
+        "ended_at"::date,
+        count("items"),
+        avg(mt."round")
+    from "MatchPlayer" mp
+    inner join
+        "MatchTeam" AS mt ON mt."match_id" = mp."match_id" and
+        mt."team_id" = mp."team_id"
+    inner join
+        "Match" M on mp."match_id" = M."match_id"
+    where
+        $item_name = any("items")
+    group by "ended_at"::date;
+""".lstrip()
 
 replace_player_quests = """
     CREATE OR REPLACE FUNCTION replace_player_quests() RETURNS BOOLEAN AS $$

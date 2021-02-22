@@ -1,106 +1,258 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1> Player Management </h1>
-<h2>Add Item</h2>
-If item already exists in player inventory, it's count will be <b>increased</b> by specified <b>item_count</b>.
-<b>item_count</b> defaults to 1.
-<form action="/admin/management/add_item">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="item_name" required placeholder="Item Name (from config) [string]" style="width: 190px">
-    <input type="text" name="item_count" placeholder="Item Count Optional[int]" style="width: 190px">
-    <input type="text" name="inserted_gem" placeholder="Gem name (from config) Optional[string]" style="width: 190px">
-    <input type="submit">
-</form>
-
-<h2>Delete Item</h2>
-If item already exists in player inventory, it's count will be <b>increased</b> by specified <b>item_count</b>.
-<b>item_count</b> defaults to 1.
-<form action="/admin/management/delete_item">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="item_name" required placeholder="Item Name (from config) [string]" style="width: 190px">
-    <input type="submit">
-</form>
-<hr>
-<h2>Add Glory</h2>
-Supports wildcard <b>*</b>.<br>
-This function will not attempt to create a new player entry if player does not exist is database.
-<form action="/admin/management/add_glory">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="glory_amount" required placeholder="Amount [int]" style="width: 190px">
-    <input type="submit">
-</form>
-
-<h2>Set Glory</h2>
-This function will not attempt to create a new player entry if player does not exist is database.
-<form action="/admin/management/set_glory">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="glory_amount" required placeholder="Amount [int]" style="width: 190px">
-    <input type="submit">
-</form>
-<hr>
-<h2>Add Level</h2>
-Supports wildcard <b>*</b>. <b>Unlike usual behavior of this request, wildcard will not give any levelup bonuses.</b><br>
-This function will not attempt to create a new player entry if player does not exist is database.
-This function <b>gives level up rewards for each added level</b>.
-Negative level values will not work.
-<form action="/admin/management/add_level">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="level_amount" required placeholder="Amount [int]" style="width: 190px">
-    <input type="submit">
-</form>
-
-<h2>Set Level</h2>
-This function will not attempt to create a new player entry if player does not exist is database.
-No level up rewards.
-<form action="/admin/management/set_level">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="level_amount" required placeholder="Amount [int]" style="width: 190px">
-    <input type="submit">
-</form>
-<hr>
-<h2>Add Exp</h2>
-Supports wildcard <b>*</b>. Wildcard request <b>will not</b> perform any postprocessing on exp
-(i.e. level up will be performed after next match ends, not immediately)<br>
-This function will not attempt to create a new player entry if player does not exist is database.
-<form action="/admin/management/add_exp">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="exp_amount" required placeholder="Amount [int]" style="width: 190px">
-    <input type="submit">
-</form>
-
-<h2>Set player current daily exp</h2>
-Exp gain per day is limited to 2000 / 4000 / 8000. If anything, you can reset accumulated daily exp for player here.
-<form action="/admin/management/set_daily_exp">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="daily_exp_amount" required placeholder="Amount [int]" style="width: 190px">
-    <input type="submit">
-</form>
-
-<hr>
-
-<h2>Add fortune</h2>
-Supports wildcard <b>*</b>
-<form action="/admin/management/add_fortune">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="fortune_amount" required placeholder="Amount [int]" style="width: 190px">
-    <input type="submit">
-</form>
-
-<h2>Set fortune</h2>
-Supports wildcard <b>*</b>
-<form action="/admin/management/set_fortune">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="fortune_amount" required placeholder="Amount [int]" style="width: 190px">
-    <input type="submit">
-</form>
-
-<h2>Set daily fortune</h2>
-<p>Amount of fortune player <b>earned</b> today.</p>
-Supports wildcard <b>*</b>
-<form action="/admin/management/set_daily_fortune">
-    <input type="text" name="steam_id" required placeholder="Steam Id [string]" style="width: 190px">
-    <input type="text" name="daily_fortune_amount" required placeholder="Amount [int]" style="width: 190px">
-    <input type="submit">
-</form>
+<div>
+    <h1> Player Management </h1>    
+</div>
+<div>
+    <h2>Add Item</h2>
+    If item already exists in player inventory, it's count will be <b>increased</b> by specified <b>item_count</b>.
+    <b>item_count</b> defaults to 1.
+</div>
+<div>
+    <form action="/admin/management/add_item">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="item_name" required placeholder="Item Name (from config) [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="item_count" placeholder="Item Count Optional[int]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="inserted_gem" placeholder="Gem name (from config) Optional[string]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <h2>Delete Item</h2>
+    If item already exists in player inventory, it's count will be <b>increased</b> by specified <b>item_count</b>.
+    <b>item_count</b> defaults to 1.
+</div>
+<div>
+    <form action="/admin/management/delete_item">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="item_name" required placeholder="Item Name (from config) [string]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <hr>
+    <h2>Add Glory</h2>
+    Supports wildcard <b>*</b>.<br>
+    This function will not attempt to create a new player entry if player does not exist is database.
+</div>
+<div>
+    <form action="/admin/management/add_glory">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="glory_amount" required placeholder="Amount [int]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <h2>Set Glory</h2>
+    This function will not attempt to create a new player entry if player does not exist is database.
+</div>
+<div>
+    <form action="/admin/management/set_glory">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="glory_amount" required placeholder="Amount [int]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <hr>
+    <h2>Add Level</h2>
+    Supports wildcard <b>*</b>. <b>Unlike usual behavior of this request, wildcard will not give any levelup bonuses.</b><br>
+    This function will not attempt to create a new player entry if player does not exist is database.
+    This function <b>gives level up rewards for each added level</b>.
+    Negative level values will not work.
+</div>
+<div>
+    <form action="/admin/management/add_level">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="level_amount" required placeholder="Amount [int]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <h2>Set Level</h2>
+    This function will not attempt to create a new player entry if player does not exist is database.
+    No level up rewards.
+</div>
+<div>
+    <form action="/admin/management/set_level">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="level_amount" required placeholder="Amount [int]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <hr>
+    <h2>Add Exp</h2>
+    Supports wildcard <b>*</b>. Wildcard request <b>will not</b> perform any postprocessing on exp
+    (i.e. level up will be performed after next match ends, not immediately)<br>
+    This function will not attempt to create a new player entry if player does not exist is database.
+</div>
+<div>
+    <form action="/admin/management/add_exp">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="exp_amount" required placeholder="Amount [int]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <h2>Set player current daily exp</h2>
+    Exp gain per day is limited to 2000 / 4000 / 8000. If anything, you can reset accumulated daily exp for player here.
+</div>
+<div>
+    <form action="/admin/management/set_daily_exp">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="daily_exp_amount" required placeholder="Amount [int]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <hr>
+    <h2>Add fortune</h2>
+    Supports wildcard <b>*</b>
+</div>
+<div>
+    <form action="/admin/management/add_fortune">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="fortune_amount" required placeholder="Amount [int]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <h2>Set fortune</h2>
+    Supports wildcard <b>*</b>
+</div>
+<div>
+    <form action="/admin/management/set_fortune">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="fortune_amount" required placeholder="Amount [int]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
+<div>
+    <h2>Set daily fortune</h2>
+    <p>Amount of fortune player <b>earned</b> today.</p>
+    Supports wildcard <b>*</b>
+</div>
+<div>
+    <form action="/admin/management/set_daily_fortune">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="steam_id" required placeholder="Steam Id [string]">
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="daily_fortune_amount" required placeholder="Amount [int]">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-outline-primary">
+        </div>
+    </form>
+</div>
 {% endblock %}

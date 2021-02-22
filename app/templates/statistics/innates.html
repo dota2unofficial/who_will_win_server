@@ -1,40 +1,48 @@
 {% extends "statistics/statistics_base.html" %}
 
 {% block main %}
-    <h3>Innate average round</h3>
-    <table>
-        <tbody>
-        <tr style="font-weight: bold">
-            <td style="width: 100px" align="center">Avg Round</td>
-            <td style="width: 300px" align="center">Name</td>
-            <td style="width: 100px" align="center">Used Count</td>
-        </tr>
-        {% for avg, count, name in innate_average_round %}
-            <tr class="stats_row">
-                <td style="width: 100px" align="center">{{ "%.2f"|format(avg|float) }}</td>
-                <td style="width: 300px">{{ name }}</td>
-                <td style="width: 100px" align="center">{{ count }}</td>
+    <div>
+        <h3>Innate average round</h3>
+    </div>
+    <div>
+        <table>
+            <tbody>
+            <tr style="font-weight: bold">
+                <td class="col-md-3" align="center">Avg Round</td>
+                <td class="col-md-6" align="center">Name</td>
+                <td class="col-md-3" align="center">Used Count</td>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            {% for avg, count, name in innate_average_round %}
+                <tr class="stats_row">
+                    <td class="col-md-3" align="center">{{ "%.2f"|format(avg|float) }}</td>
+                    <td class="col-md-6">{{ name }}</td>
+                    <td class="col-md-3" align="center">{{ count }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h3>Innate usage</h3>
+    </div>
 
-    <h3>Innate usage</h3>
-    <table>
-        <tbody>
-        <tr style="font-weight: bold">
-            <td style="width: 100px" align="center">Used Count</td>
-            <td style="width: 300px" align="center">Name</td>
-            <td style="width: 100px" align="center">Avg Round</td>
-        </tr>
-        {% for avg, count, name in innate_usage %}
-            <tr class="stats_row">
-                <td style="width: 100px" align="center">{{ count }}</td>
-                <td style="width: 300px">{{ name }}</td>
-                <td style="width: 100px" align="center">{{ "%.2f"|format(avg|float) }}</td>
+    <div>
+        <table>
+            <tbody>
+            <tr style="font-weight: bold">
+                <td class="col-md-3" align="center">Used Count</td>
+                <td class="col-md-6" align="center">Name</td>
+                <td class="col-md-3" align="center">Avg Round</td>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            {% for avg, count, name in innate_usage %}
+                <tr class="stats_row">
+                    <td class="col-md-3" align="center">{{ count }}</td>
+                    <td class="col-md-6">{{ name }}</td>
+                    <td class="col-md-3" align="center">{{ "%.2f"|format(avg|float) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <hr>
 {% endblock %}
